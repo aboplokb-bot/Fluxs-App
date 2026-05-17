@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FLUXS - Your Peak Performance Algorithm</title>
-    <script src="https://js.stripe.com/v3/"></script>
     <style>
         * {
             margin: 0;
@@ -329,6 +328,9 @@
             transition: all 0.3s ease;
             font-size: 14px;
             margin-top: 20px;
+            text-decoration: none;
+            display: block;
+            text-align: center;
         }
         
         .checkout-btn:hover {
@@ -499,7 +501,7 @@
                         <li>Energy state tracking</li>
                         <li>Performance trends</li>
                     </ul>
-                    <button class="checkout-btn" onclick="checkout('price_1TY7XgPmgKCt9JtVlo3Qcznl', 'Pro')">Start Free Trial</button>
+                    <a href="https://buy.stripe.com/cNibJ30jz2oSaYy0Iy3VC03" class="checkout-btn" target="_blank">Start Free Trial</a>
                 </div>
                 
                 <!-- ELITE TIER -->
@@ -517,7 +519,7 @@
                         <li>Team peak patterns</li>
                         <li>Priority support</li>
                     </ul>
-                    <button class="checkout-btn" onclick="checkout('price_1TY7XpPmgKCt9JtVqoF0zp6d', 'Elite Team')">Start Free Trial</button>
+                    <a href="https://buy.stripe.com/3cI28t4zP8Ng1nY0Iy3VC04" class="checkout-btn" target="_blank">Start Free Trial</a>
                 </div>
                 
                 <!-- ILEAD TIER -->
@@ -534,7 +536,7 @@
                         <li>Priority algorithm updates</li>
                         <li>Custom integrations</li>
                     </ul>
-                    <button class="checkout-btn" onclick="checkout('price_1TY7XyPmgKCt9JtVdjnBCJjg', 'iLead Premium')">Start Free Trial</button>
+                    <a href="https://buy.stripe.com/3cI9AV4zP3sWd6Gbnc3VC05" class="checkout-btn" target="_blank">Start Free Trial</a>
                 </div>
             </div>
         </div>
@@ -551,9 +553,6 @@
     </div>
     
     <script>
-        // Initialize Stripe
-        const stripe = Stripe('pk_live_51TLo63PmgKCt9JtVLRfF9ZyQmQ6BX0XQNvGG5pKh2bSe6VGVoVlkWLdVJt4VsB0P3H5FvzYVqP0S4pEZ3qxBsEZ00hqxWaWsBY');
-        
         // Algorithm
         function calculateFlux() {
             const sleep = parseInt(document.getElementById('sleep').value);
@@ -613,20 +612,6 @@
                 document.getElementById('pricingScreen').style.display = 'block';
                 window.scrollTo(0, 0);
             }, 3000);
-        }
-        
-        function checkout(priceId, planName) {
-            // Redirect to Stripe checkout
-            stripe.redirectToCheckout({
-                lineItems: [{ price: priceId, quantity: 1 }],
-                mode: 'subscription',
-                successUrl: window.location.href + '?success=true',
-                cancelUrl: window.location.href + '?canceled=true'
-            }).then(result => {
-                if (result.error) {
-                    alert('Error: ' + result.error.message);
-                }
-            });
         }
         
         // Check for success redirect
