@@ -1083,6 +1083,26 @@
             }, 3000);
         }
 
+    
+        // DOWNSELL FUNCTIONS
+        function showDownsell(tier) {
+            const prices = { solo: '£39', team: '£199', legacy: '£499' };
+            const checkoutLinks = {
+                solo: 'https://buy.stripe.com/test_cNibJ30jz2oSaYy0Iy3VC03',  // SOLO STARTER
+                team: 'https://buy.stripe.com/test_3cI28t4zP8Ng1nY0Iy3VC04', // TEAM STARTER
+                legacy: 'https://buy.stripe.com/test_3cI9AV4zP3sWd6Gbnc3VC05' // LEGACY STARTER
+            };
+            document.getElementById('downsellPrice').textContent = prices[tier];
+            document.getElementById('downsellBtn').onclick = function() {
+                goToStripeCheckout(checkoutLinks[tier]);
+            };
+            document.getElementById('downsellModal').style.display = 'flex';
+        }
+
+        function goToStripeCheckout(link) {
+            window.location.href = link;
+        }
+
     </script>
 </body>
 </html>
