@@ -3,1104 +3,699 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FLUXS v4.2 - Peak Performance OS</title>
+    <title>FLUXS - Detect Your Peak Performance Window</title>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-            background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f1729 100%);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
             color: #e2e8f0;
             line-height: 1.6;
             min-height: 100vh;
         }
 
-        .nav-header {
-            background: rgba(15, 23, 42, 0.8);
-            border-bottom: 1px solid rgba(148, 163, 184, 0.1);
-            padding: 16px 32px;
+        /* ===== HERO SECTION - ABOVE FOLD ===== */
+        .hero {
+            height: 85vh;
             display: flex;
-            justify-content: space-between;
+            flex-direction: column;
+            justify-content: space-around;
             align-items: center;
-            position: sticky;
-            top: 0;
-            z-index: 100;
+            padding: 20px;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            text-align: center;
         }
 
         .logo {
-            font-size: 24px;
+            font-size: 28px;
             font-weight: 700;
             color: #06b6d4;
             letter-spacing: 2px;
         }
 
-        .nav-links {
-            display: flex;
-            gap: 32px;
-            list-style: none;
-        }
-
-        .nav-links a {
-            color: #94a3b8;
-            text-decoration: none;
-            font-size: 14px;
-            transition: color 0.2s;
-            cursor: pointer;
-        }
-
-        .nav-links a:hover {
-            color: #06b6d4;
-        }
-
-        .screen {
-            display: none;
-            animation: fadeIn 0.3s ease-in;
-        }
-
-        .screen.active {
-            display: block;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 40px 20px;
-        }
-
-        .hero {
-            text-align: center;
-            margin-bottom: 60px;
-            padding: 60px 20px;
-        }
-
         .hero h1 {
-            font-size: 48px;
+            font-size: clamp(28px, 8vw, 48px);
             font-weight: 700;
-            margin-bottom: 20px;
-            background: linear-gradient(135deg, #06b6d4 0%, #0ea5e9 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .hero p {
-            font-size: 18px;
-            color: #cbd5e1;
-            margin-bottom: 40px;
-            max-width: 600px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-
-        .hero-tagline {
-            font-size: 14px;
-            color: #64748b;
-            font-style: italic;
-            margin-top: 20px;
-        }
-
-        .assessment-form {
-            background: rgba(30, 41, 59, 0.7);
-            border: 1px solid rgba(148, 163, 184, 0.2);
-            border-radius: 12px;
-            padding: 40px;
-            margin-bottom: 60px;
-            max-width: 600px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-
-        .form-group {
+            color: #06b6d4;
+            line-height: 1.2;
             margin-bottom: 20px;
         }
 
-        .form-group label {
-            display: block;
-            margin-bottom: 8px;
-            font-size: 14px;
-            font-weight: 500;
+        .hero-subheader {
             color: #cbd5e1;
-        }
-
-        .form-group input,
-        .form-group select {
-            width: 100%;
-            padding: 10px;
-            background: rgba(15, 23, 42, 0.9);
-            border: 1px solid rgba(148, 163, 184, 0.2);
-            border-radius: 6px;
-            color: #e2e8f0;
             font-size: 14px;
+            max-width: 320px;
+            margin: 0 auto 30px;
+            line-height: 1.5;
         }
 
-        .form-group input:focus,
-        .form-group select:focus {
-            outline: none;
-            border-color: #06b6d4;
-            box-shadow: 0 0 0 3px rgba(6, 182, 212, 0.1);
-        }
-
-        .slider-value {
-            display: inline-block;
-            background: #06b6d4;
-            color: #0f172a;
-            padding: 4px 12px;
-            border-radius: 4px;
-            font-size: 12px;
-            font-weight: 600;
-            margin-left: 8px;
-        }
-
-        .btn {
-            padding: 12px 24px;
-            border: none;
-            border-radius: 6px;
-            font-size: 14px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s;
-            width: 100%;
-        }
-
-        .btn-primary {
-            background: linear-gradient(135deg, #06b6d4 0%, #0ea5e9 100%);
-            color: #0f172a;
-        }
-
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 25px rgba(6, 182, 212, 0.3);
-        }
-
-        .flux-result {
+        .social-proof {
             text-align: center;
-            background: rgba(30, 41, 59, 0.7);
-            border: 1px solid rgba(148, 163, 184, 0.2);
-            border-radius: 12px;
-            padding: 60px 40px;
-            max-width: 600px;
-            margin-left: auto;
-            margin-right: auto;
-            margin-bottom: 60px;
-        }
-
-        .flux-score {
-            font-size: 72px;
-            font-weight: 700;
-            margin-bottom: 20px;
-            color: #06b6d4;
-        }
-
-        .flux-level {
-            font-size: 28px;
-            font-weight: 700;
+            color: #94a3b8;
+            font-size: 12px;
             margin-bottom: 30px;
-            color: #06b6d4;
-            min-height: 40px;
         }
 
-        .flux-description {
+        .stars {
             font-size: 16px;
-            color: #cbd5e1;
-            margin-bottom: 40px;
-            line-height: 1.8;
-            min-height: 60px;
-        }
-
-        .pricing {
-            margin-bottom: 80px;
-        }
-
-        .pricing-title {
-            text-align: center;
-            font-size: 36px;
-            font-weight: 700;
-            margin-bottom: 50px;
-            color: #e2e8f0;
-        }
-
-        .pricing-cards {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 30px;
-            max-width: 1100px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-
-        .pricing-card {
-            background: rgba(30, 41, 59, 0.7);
-            border: 1px solid rgba(148, 163, 184, 0.2);
-            border-radius: 12px;
-            padding: 40px;
-            text-align: center;
-            transition: all 0.3s;
-        }
-
-        .pricing-card:hover {
-            border-color: #06b6d4;
-            box-shadow: 0 20px 40px rgba(6, 182, 212, 0.15);
-            transform: translateY(-5px);
-        }
-
-        .pricing-card.featured {
-            border: 2px solid #06b6d4;
-            transform: scale(1.05);
-        }
-
-        .pricing-card h3 {
-            font-size: 20px;
-            font-weight: 600;
-            margin-bottom: 12px;
-            color: #e2e8f0;
-        }
-
-        .pricing-card .subtitle {
-            font-size: 12px;
-            color: #94a3b8;
-            margin-bottom: 20px;
-        }
-
-        .price {
-            font-size: 48px;
-            font-weight: 700;
-            color: #06b6d4;
             margin-bottom: 8px;
         }
 
-        .price-period {
-            font-size: 12px;
-            color: #64748b;
-            margin-bottom: 30px;
+        .proof-text {
+            max-width: 280px;
+            line-height: 1.4;
         }
 
-        .features-list {
-            text-align: left;
-            margin-bottom: 30px;
-        }
-
-        .feature-item {
-            display: flex;
-            gap: 12px;
-            margin-bottom: 12px;
-            font-size: 13px;
-            color: #cbd5e1;
-        }
-
-        .feature-item::before {
-            content: "✓";
-            color: #06b6d4;
-            font-weight: 700;
-            flex-shrink: 0;
-        }
-
-        .checkout-btn {
-            background: linear-gradient(135deg, #06b6d4 0%, #0ea5e9 100%);
-            color: #0f172a;
-            padding: 12px 24px;
-            border: none;
-            border-radius: 6px;
-            font-weight: 600;
-            cursor: pointer;
-            text-decoration: none;
-            display: inline-block;
+        /* ===== PRIMARY CTA (HERO) ===== */
+        .cta-primary {
             width: 100%;
-            transition: all 0.2s;
+            max-width: 340px;
+            padding: 16px 20px;
+            background: #06b6d4;
+            color: #000;
+            font-size: 16px;
+            font-weight: 700;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 12px;
         }
 
-        .checkout-btn:hover {
+        .cta-primary:hover {
+            background: #0ea5e9;
             transform: translateY(-2px);
             box-shadow: 0 10px 25px rgba(6, 182, 212, 0.3);
         }
 
-        .payment-notice {
-            font-size: 11px;
+        .cta-secondary {
             color: #64748b;
-            margin-top: 15px;
-        }
-
-        .faqs {
-            background: rgba(30, 41, 59, 0.5);
-            border: 1px solid rgba(148, 163, 184, 0.1);
-            border-radius: 12px;
-            padding: 40px;
-            margin-bottom: 60px;
-            max-width: 900px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-
-        .faqs h2 {
-            font-size: 28px;
-            font-weight: 700;
-            margin-bottom: 30px;
-            text-align: center;
-            color: #e2e8f0;
-        }
-
-        .faq-item {
-            margin-bottom: 20px;
-            border-bottom: 1px solid rgba(148, 163, 184, 0.1);
-            padding-bottom: 20px;
-        }
-
-        .faq-item:last-child {
-            border-bottom: none;
-        }
-
-        .faq-question {
-            font-weight: 600;
-            color: #06b6d4;
-            cursor: pointer;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-size: 14px;
-        }
-
-        .faq-answer {
-            display: none;
-            margin-top: 12px;
-            font-size: 13px;
-            color: #cbd5e1;
-            line-height: 1.8;
-        }
-
-        .faq-item.open .faq-answer {
-            display: block;
-        }
-
-        .faq-toggle {
-            font-size: 18px;
-            color: #06b6d4;
-        }
-
-        .footer {
-            background: rgba(15, 23, 42, 0.95);
-            border-top: 1px solid rgba(148, 163, 184, 0.1);
-            padding: 60px 20px 40px;
-            margin-top: 80px;
-        }
-
-        .footer-content {
-            max-width: 1200px;
-            margin: 0 auto;
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 40px;
-            margin-bottom: 40px;
-        }
-
-        .footer-section h3 {
-            font-size: 14px;
-            font-weight: 700;
-            color: #06b6d4;
-            margin-bottom: 16px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .footer-section p,
-        .footer-section a {
             font-size: 12px;
-            color: #94a3b8;
-            line-height: 1.8;
-            text-decoration: none;
+            background: none;
+            border: none;
+            cursor: pointer;
+            text-decoration: underline;
+            transition: color 0.2s;
         }
 
-        .footer-section a:hover {
+        .cta-secondary:hover {
             color: #06b6d4;
         }
 
-        .footer-bottom {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding-top: 40px;
-            border-top: 1px solid rgba(148, 163, 184, 0.1);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 20px;
-        }
-
-        .copyright {
-            font-size: 11px;
-            color: #64748b;
-        }
-
+        /* ===== MODAL OVERLAY ===== */
         .modal {
             display: none;
             position: fixed;
             top: 0;
             left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.7);
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.85);
             z-index: 1000;
-            align-items: center;
             justify-content: center;
+            align-items: center;
+            padding: 20px;
+            overflow-y: auto;
         }
 
-        .modal.open {
+        .modal.show {
             display: flex;
         }
 
         .modal-content {
-            background: rgba(15, 23, 42, 0.98);
-            border: 1px solid rgba(148, 163, 184, 0.2);
+            background: #1e293b;
             border-radius: 12px;
-            padding: 40px;
-            max-width: 700px;
+            padding: 30px;
+            max-width: 420px;
+            width: 100%;
             max-height: 80vh;
             overflow-y: auto;
-            color: #e2e8f0;
+            border: 1px solid #334155;
+            position: relative;
         }
 
-        .modal-content h2 {
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
             margin-bottom: 20px;
-            color: #06b6d4;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #334155;
         }
 
-        .modal-content p {
-            font-size: 13px;
-            line-height: 1.8;
-            margin-bottom: 16px;
-            color: #cbd5e1;
+        .modal-title {
+            color: #06b6d4;
+            font-size: 20px;
+            font-weight: 700;
         }
 
         .modal-close {
-            position: absolute;
-            top: 20px;
-            right: 20px;
             background: none;
             border: none;
-            color: #94a3b8;
+            color: #cbd5e1;
             font-size: 24px;
             cursor: pointer;
+            padding: 0;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: color 0.2s;
         }
 
         .modal-close:hover {
             color: #06b6d4;
         }
 
-        @media (max-width: 768px) {
-            .hero h1 { font-size: 32px; }
-            .pricing-cards { grid-template-columns: 1fr; }
-            .pricing-card.featured { transform: scale(1); }
-            .nav-links { flex-direction: column; gap: 16px; }
+        /* ===== FORM FIELDS IN MODAL ===== */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            color: #cbd5e1;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .slider-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        input[type="range"] {
+            flex: 1;
+            height: 6px;
+            background: #334155;
+            border-radius: 3px;
+            outline: none;
+            -webkit-appearance: none;
+            appearance: none;
+            cursor: pointer;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: #06b6d4;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(6, 182, 212, 0.4);
+        }
+
+        input[type="range"]::-moz-range-thumb {
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: #06b6d4;
+            cursor: pointer;
+            border: none;
+            box-shadow: 0 2px 8px rgba(6, 182, 212, 0.4);
+        }
+
+        .slider-value {
+            background: #334155;
+            color: #06b6d4;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+            min-width: 50px;
+            text-align: center;
+        }
+
+        select {
+            width: 100%;
+            padding: 10px 12px;
+            background: #0f172a;
+            color: #e2e8f0;
+            border: 1px solid #334155;
+            border-radius: 6px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: border-color 0.2s;
+        }
+
+        select:focus {
+            outline: none;
+            border-color: #06b6d4;
+        }
+
+        input[type="number"] {
+            width: 100%;
+            padding: 10px 12px;
+            background: #0f172a;
+            color: #e2e8f0;
+            border: 1px solid #334155;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+
+        input[type="number"]:focus {
+            outline: none;
+            border-color: #06b6d4;
+        }
+
+        /* ===== MODAL BUTTONS ===== */
+        .modal-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .btn-detect {
+            width: 100%;
+            padding: 14px;
+            background: #06b6d4;
+            color: #000;
+            font-size: 16px;
+            font-weight: 700;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-detect:hover {
+            background: #0ea5e9;
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            width: 100%;
+            padding: 12px;
+            background: transparent;
+            color: #06b6d4;
+            font-size: 14px;
+            font-weight: 600;
+            border: 1px solid #06b6d4;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-secondary:hover {
+            background: rgba(6, 182, 212, 0.1);
+        }
+
+        /* ===== RESULT DISPLAY ===== */
+        .result-display {
+            display: none;
+            text-align: center;
+        }
+
+        .result-display.show {
+            display: block;
+        }
+
+        .result-title {
+            color: #cbd5e1;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 15px;
+        }
+
+        .peak-window {
+            color: #06b6d4;
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .peak-emoji {
+            font-size: 24px;
+            margin-left: 8px;
+        }
+
+        .consistency {
+            color: #94a3b8;
+            font-size: 12px;
+            margin-bottom: 25px;
+        }
+
+        /* ===== PRICING SECTION (BELOW HERO) ===== */
+        .pricing-section {
+            padding: 60px 20px;
+            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+        }
+
+        .pricing-title {
+            text-align: center;
+            color: #06b6d4;
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 40px;
+        }
+
+        .pricing-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .pricing-card {
+            background: #0f172a;
+            border: 1px solid #334155;
+            border-radius: 12px;
+            padding: 30px;
+            text-align: center;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .pricing-card:hover {
+            border-color: #06b6d4;
+            box-shadow: 0 10px 30px rgba(6, 182, 212, 0.1);
+            transform: translateY(-5px);
+        }
+
+        .pricing-name {
+            color: #06b6d4;
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .pricing-amount {
+            color: #e2e8f0;
+            font-size: 36px;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .pricing-period {
+            color: #94a3b8;
+            font-size: 12px;
+            margin-bottom: 25px;
+        }
+
+        .pricing-features {
+            text-align: left;
+            color: #cbd5e1;
+            font-size: 13px;
+            line-height: 1.8;
+            margin-bottom: 25px;
+        }
+
+        .pricing-cta {
+            width: 100%;
+            padding: 12px;
+            background: #06b6d4;
+            color: #000;
+            font-weight: 700;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .pricing-cta:hover {
+            background: #0ea5e9;
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 600px) {
+            .hero h1 {
+                font-size: 32px;
+            }
+
+            .hero {
+                height: 100vh;
+            }
+
+            .modal-content {
+                padding: 20px;
+            }
+
+            .pricing-cards {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="nav-header">
+
+    <!-- ===== HERO SECTION (NO SCROLL NEEDED) ===== -->
+    <div class="hero">
         <div class="logo">FLUXS</div>
-        <ul class="nav-links">
-            <li><a onclick="scrollToSection('assessment')">Assess</a></li>
-            <li><a onclick="scrollToSection('pricing')">Pricing</a></li>
-            <li><a onclick="scrollToSection('faq')">FAQs</a></li>
-            <li><a onclick="openModal('disclaimer')">Legal</a></li>
-        </ul>
+        
+        <h1>Stop executing<br>during worst hours</h1>
+        
+        <p class="hero-subheader">
+            Discover when you're 40% more productive
+        </p>
+        
+        <div class="social-proof">
+            <div class="stars">⭐⭐⭐⭐⭐</div>
+            <div class="proof-text">"Rescheduled peak hours. Revenue up 40%."</div>
+        </div>
+        
+        <button class="cta-primary" onclick="openModal()">
+            Take 3-Min Assessment
+        </button>
+        
+        <button class="cta-secondary" onclick="openModal()">
+            Try 7 Days Free £39
+        </button>
     </div>
 
-    <!-- ASSESSMENT SCREEN -->
-    <div id="assessmentScreen" class="screen active">
-        <div class="container">
-            <div class="hero">
-                <h1>Detect Your Peak State</h1>
-                <p>Real-time flux assessment. Know your performance window. Align with Identity: The iLead Framework.</p>
-                <p class="hero-tagline">One-time monthly access. No commitment. Cancel anytime.</p>
+    <!-- ===== ASSESSMENT MODAL ===== -->
+    <div class="modal" id="assessmentModal">
+        <div class="modal-content">
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h2 class="modal-title">Your Peak Window</h2>
+                <button class="modal-close" onclick="closeModal()">✕</button>
             </div>
 
-            <div class="assessment-form" id="assessment">
+            <!-- Assessment Form (hidden after submit) -->
+            <div id="assessmentForm">
+                <!-- Sleep -->
                 <div class="form-group">
-                    <label>How many hours did you sleep last night?</label>
-                    <input type="range" min="0" max="10" value="7" id="sleep" oninput="updateSlider(this)">
-                    <span class="slider-value" id="sleepValue">7 hours</span>
+                    <label class="form-label">How many hours did you sleep last night?</label>
+                    <div class="slider-container">
+                        <input type="range" id="sleep" min="0" max="12" value="7" 
+                            oninput="updateValue('sleepValue', this.value + ' hrs')">
+                        <span class="slider-value" id="sleepValue">7 hrs</span>
+                    </div>
                 </div>
 
+                <!-- Mood -->
                 <div class="form-group">
-                    <label>Current mood (1-10)</label>
-                    <input type="range" min="1" max="10" value="7" id="mood" oninput="updateSlider(this)">
-                    <span class="slider-value" id="moodValue">7</span>
+                    <label class="form-label">Current mood (1-10)</label>
+                    <div class="slider-container">
+                        <input type="range" id="mood" min="1" max="10" value="7" 
+                            oninput="updateValue('moodValue', this.value + '/10')">
+                        <span class="slider-value" id="moodValue">7/10</span>
+                    </div>
                 </div>
 
+                <!-- Energy -->
                 <div class="form-group">
-                    <label>Energy level (1-10)</label>
-                    <input type="range" min="1" max="10" value="7" id="energy" oninput="updateSlider(this)">
-                    <span class="slider-value" id="energyValue">7</span>
+                    <label class="form-label">Energy level (1-10)</label>
+                    <div class="slider-container">
+                        <input type="range" id="energy" min="1" max="10" value="7" 
+                            oninput="updateValue('energyValue', this.value + '/10')">
+                        <span class="slider-value" id="energyValue">7/10</span>
+                    </div>
                 </div>
 
+                <!-- Focus Ability -->
                 <div class="form-group">
-                    <label>Focus ability</label>
+                    <label class="form-label">Focus ability</label>
                     <select id="focus">
-                        <option value="high">High</option>
-                        <option value="medium" selected>Medium</option>
                         <option value="low">Low</option>
+                        <option value="medium" selected>Medium</option>
+                        <option value="high">High</option>
                     </select>
                 </div>
 
+                <!-- Interruptions -->
                 <div class="form-group">
-                    <label>Interruptions in last 30 mins</label>
-                    <input type="number" min="0" max="20" value="0" id="interruptions">
+                    <label class="form-label">Interruptions in last 30 mins</label>
+                    <input type="number" id="interruptions" min="0" max="20" value="0">
                 </div>
 
-                <button class="btn btn-primary" onclick="calculateFlux()">Detect Your Flux Level</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- RESULT SCREEN -->
-    <div id="resultScreen" class="screen">
-        <div class="container">
-            <div class="flux-result">
-                <p style="color: #94a3b8; font-size: 12px; margin-bottom: 30px;">Detect your Flux Level. Push your performance. Align with Identity: iLead The Way Framework</p>
-                <div class="flux-score" id="fluxScore">0.0</div>
-                <div class="flux-level" id="fluxLevel">ANALYZING</div>
-                <div class="flux-description" id="fluxDescription">Processing your peak state assessment...</div>
-                <button class="btn btn-primary" onclick="showPricingFromResult()">View Pricing & Subscribe</button>
-                <button class="btn" style="background: rgba(148, 163, 184, 0.1); color: #94a3b8; margin-top: 12px;" onclick="resetAssessment()">Start Over</button>
-            </div>
-        </div>
-    </div>
-
-    
-    <!-- WEEKLY TRENDS SCREEN -->
-    <div id="trendsScreen" class="screen">
-        <div class="container">
-            <div style="max-width: 900px; margin: 0 auto; margin-bottom: 40px;">
-                <div style="text-align: center; margin-bottom: 40px;">
-                    <h2 style="font-size: 32px; font-weight: 700; color: #06b6d4; margin-bottom: 10px;">Your 7-Day Flux Pattern</h2>
-                    <p style="color: #94a3b8; font-size: 14px;">Track your peak performance window. Find your unstoppable hours.</p>
-                </div>
-
-                <div style="background: rgba(30, 41, 59, 0.7); border: 1px solid rgba(148, 163, 184, 0.2); border-radius: 12px; padding: 30px; margin-bottom: 30px;">
-                    
-                    <!-- DAILY TREND CHART -->
-                    <h3 style="color: #06b6d4; margin-bottom: 20px; font-size: 16px;">Daily Assessments</h3>
-                    <div id="dailyTrend" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(80px, 1fr)); gap: 12px; margin-bottom: 30px;">
-                        <!-- Generated by JS -->
-                    </div>
-
-                    <!-- KEY STATS -->
-                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-top: 30px; padding-top: 30px; border-top: 1px solid rgba(148, 163, 184, 0.1);">
-                        <div style="text-align: center;">
-                            <div style="font-size: 28px; font-weight: 700; color: #06b6d4;" id="avgFlux">0.0</div>
-                            <div style="font-size: 12px; color: #94a3b8; margin-top: 8px;">Average Flux</div>
-                        </div>
-                        <div style="text-align: center;">
-                            <div style="font-size: 28px; font-weight: 700; color: #06b6d4;" id="bestDay">—</div>
-                            <div style="font-size: 12px; color: #94a3b8; margin-top: 8px;">Best Day</div>
-                        </div>
-                        <div style="text-align: center;">
-                            <div style="font-size: 28px; font-weight: 700; color: #06b6d4;" id="peakWindow">—</div>
-                            <div style="font-size: 12px; color: #94a3b8; margin-top: 8px;">Peak Window</div>
-                        </div>
-                        <div style="text-align: center;">
-                            <div style="font-size: 28px; font-weight: 700; color: #06b6d4;" id="consistency">0%</div>
-                            <div style="font-size: 12px; color: #94a3b8; margin-top: 8px;">Consistency</div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- INSIGHTS -->
-                <div style="background: rgba(6, 182, 212, 0.1); border: 1px solid rgba(6, 182, 212, 0.2); border-radius: 12px; padding: 20px; margin-bottom: 30px;">
-                    <div style="color: #06b6d4; font-weight: 600; margin-bottom: 10px;">💡 Your Pattern</div>
-                    <div style="color: #cbd5e1; font-size: 13px; line-height: 1.8;" id="insightText">
-                        Track 3+ daily assessments to discover your peak performance window.
-                    </div>
-                </div>
-
-                <!-- CTA -->
-                <div style="text-align: center;">
-                    <button class="btn btn-primary" onclick="showPricingFromTrends()" style="max-width: 400px; margin: 0 auto 15px;">Unlock Full Week Analytics</button>
-                    <button class="btn" style="background: rgba(148, 163, 184, 0.1); color: #94a3b8; max-width: 400px; margin: 0 auto; width: 100%;" onclick="continueTesting()">Continue Testing Free</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-
-    <!-- PRICING SCREEN -->
-    <div id="pricingScreen" class="screen">
-        <div class="container">
-            <div id="pricing" class="pricing">
-                <h2 class="pricing-title">One-Time Monthly Access</h2>
-                <div class="pricing-cards">
-                    <div class="pricing-card">
-                        <h3>Pro</h3>
-                        <p class="subtitle">For solo founders & executives</p>
-                        <div class="price">£99</div>
-                        <p class="price-period">one-time, 30-day access</p>
-                        <div class="features-list">
-                            <div class="feature-item">Unlimited daily flux assessments</div>
-                            <div class="feature-item">Instant results & patterns</div>
-                            <div class="feature-item">Lifetime iLEAD framework</div>
-                            <div class="feature-item">Energy state tracking</div>
-                            <div class="feature-item">Performance trends</div>
-                        </div>
-                        <a href="https://buy.stripe.com/cNibJ30jz2oSaYy0Iy3VC03" class="checkout-btn" target="_blank">Subscribe Now</a>
-                        <p class="payment-notice">One-time payment. Access for 30 days. Renew monthly if needed.</p>
-                    </div>
-
-                    <div class="pricing-card featured">
-                        <h3>Elite Team</h3>
-                        <p class="subtitle">For small teams & scaling founders</p>
-                        <div class="price">£499</div>
-                        <p class="price-period">one-time, 30-day access</p>
-                        <div class="features-list">
-                            <div class="feature-item">Everything in Pro</div>
-                            <div class="feature-item">Up to 5 team members</div>
-                            <div class="feature-item">Team dashboard</div>
-                            <div class="feature-item">Collaborative insights</div>
-                            <div class="feature-item">Team peak patterns</div>
-                            <div class="feature-item">Priority support</div>
-                        </div>
-                        <a href="https://buy.stripe.com/3cI28t4zP8Ng1nY0Iy3VC04" class="checkout-btn" target="_blank">Subscribe Now</a>
-                        <p class="payment-notice">One-time payment. Access for 30 days. Renew monthly if needed.</p>
-                    </div>
-
-                    <div class="pricing-card">
-                        <h3>iLead Premium</h3>
-                        <p class="subtitle">For transformation leaders</p>
-                        <div class="price">£999</div>
-                        <p class="price-period">one-time, 30-day access</p>
-                        <div class="features-list">
-                            <div class="feature-item">Everything in Elite</div>
-                            <div class="feature-item">Unlimited team members</div>
-                            <div class="feature-item">1:1 coaching monthly</div>
-                            <div class="feature-item">VIP 24/7 support</div>
-                            <div class="feature-item">Priority algorithm updates</div>
-                            <div class="feature-item">Custom integrations</div>
-                        </div>
-                        <a href="https://buy.stripe.com/3cI9AV4zP3sWd6Gbnc3VC05" class="checkout-btn" target="_blank">Subscribe Now</a>
-                        <p class="payment-notice">One-time payment. Access for 30 days. Renew monthly if needed.</p>
-                    </div>
+                <!-- Submit Button -->
+                <div class="modal-buttons">
+                    <button class="btn-detect" onclick="detectFlux()">
+                        Detect Your Flux Level
+                    </button>
                 </div>
             </div>
 
-            <!-- FAQS -->
-            <div id="faq" class="faqs">
-                <h2>Frequently Asked Questions</h2>
+            <!-- Result Display (hidden initially) -->
+            <div class="result-display" id="resultDisplay">
+                <div class="result-title">Your Peak Window</div>
+                <div class="peak-window" id="peakWindow">10-11am <span class="peak-emoji">⭐</span></div>
+                <div class="consistency">Consistency: 95%</div>
                 
-                <div class="faq-item">
-                    <div class="faq-question" onclick="toggleFaq(this)">
-                        <span>How does the one-time monthly payment work?</span>
-                        <span class="faq-toggle">+</span>
-                    </div>
-                    <div class="faq-answer">
-                        FLUXS operates on a one-time monthly billing model. You pay once for 30 days of access. No recurring charges. No auto-renewal. When your 30 days expire, you can choose to renew for another month or cancel. Complete control, zero lock-in.
-                    </div>
-                </div>
-
-                <div class="faq-item">
-                    <div class="faq-question" onclick="toggleFaq(this)">
-                        <span>Can I cancel or pause my subscription?</span>
-                        <span class="faq-toggle">+</span>
-                    </div>
-                    <div class="faq-answer">
-                        Yes. Since there's no subscription, you simply don't renew when your 30-day period ends. No cancellation forms. No phone calls. Access terminates naturally when your paid period expires.
-                    </div>
-                </div>
-
-                <div class="faq-item">
-                    <div class="faq-question" onclick="toggleFaq(this)">
-                        <span>What happens after my 30-day access expires?</span>
-                        <span class="faq-toggle">+</span>
-                    </div>
-                    <div class="faq-answer">
-                        Your access ends. All historical data and insights remain accessible if you renew. Simply purchase another month when you're ready to continue using FLUXS.
-                    </div>
-                </div>
-
-                <div class="faq-item">
-                    <div class="faq-question" onclick="toggleFaq(this)">
-                        <span>Is there a free trial?</span>
-                        <span class="faq-toggle">+</span>
-                    </div>
-                    <div class="faq-answer">
-                        One free flux assessment is available without payment. After that, access requires a paid subscription. This demonstrates the quality and accuracy of our algorithm before you commit.
-                    </div>
-                </div>
-
-                <div class="faq-item">
-                    <div class="faq-question" onclick="toggleFaq(this)">
-                        <span>What is the refund policy?</span>
-                        <span class="faq-toggle">+</span>
-                    </div>
-                    <div class="faq-answer">
-                        No refunds after your one-time monthly payment is processed. This commitment ensures you invest fully in tracking and optimizing your peak state. Each month is a fresh choice to continue.
-                    </div>
-                </div>
-
-                <div class="faq-item">
-                    <div class="faq-question" onclick="toggleFaq(this)">
-                        <span>Do I need to provide a credit card for the free assessment?</span>
-                        <span class="faq-toggle">+</span>
-                    </div>
-                    <div class="faq-answer">
-                        No. The free assessment requires only your inputs. Payment is only needed if you choose to purchase a subscription tier after experiencing the assessment.
-                    </div>
-                </div>
-
-                <div class="faq-item">
-                    <div class="faq-question" onclick="toggleFaq(this)">
-                        <span>Can I share access with my team?</span>
-                        <span class="faq-toggle">+</span>
-                    </div>
-                    <div class="faq-answer">
-                        Yes. Elite Team (5 members) and iLead Premium (unlimited members) include multi-user access. Each tier is designed for collaboration. Solo (Pro) is for individual use only.
-                    </div>
-                </div>
-
-                <div class="faq-item">
-                    <div class="faq-question" onclick="toggleFaq(this)">
-                        <span>What payment methods do you accept?</span>
-                        <span class="faq-toggle">+</span>
-                    </div>
-                    <div class="faq-answer">
-                        We accept all major credit and debit cards via Stripe. Payments are secure, encrypted, and PCI-compliant.
-                    </div>
+                <div class="modal-buttons">
+                    <button class="cta-primary" onclick="goToDowsell()">
+                        Try 7-Day for £39
+                    </button>
+                    <button class="btn-secondary" onclick="goToPricing()">
+                        View Monthly Plans
+                    </button>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- DISCLAIMER MODAL -->
-    <div id="disclaimerModal" class="modal">
-        <div class="modal-content">
-            <button class="modal-close" onclick="closeModal()">×</button>
-            <h2>Legal Information</h2>
-            
-            <h3 style="color: #06b6d4; margin-top: 30px; margin-bottom: 15px;">Disclaimer</h3>
-            <p>FLUXS is a personal performance assessment tool. Flux scores are calculated based on your inputs and do not diagnose, treat, or cure any medical, psychological, or health conditions. Results are for informational purposes only. Consult qualified professionals before making significant decisions based on FLUXS assessments. FLUXS is not a substitute for medical, psychological, or professional coaching services.</p>
-
-            <h3 style="color: #06b6d4; margin-top: 30px; margin-bottom: 15px;">Refund Policy</h3>
-            <p>All purchases are final. No refunds are issued after payment is processed, regardless of circumstance. This no-refund policy reflects the commitment model: you invest fully in your performance optimization for the month. If you do not wish to continue after 30 days, simply do not renew.</p>
-
-            <h3 style="color: #06b6d4; margin-top: 30px; margin-bottom: 15px;">Terms of Use</h3>
-            <p>By using FLUXS, you agree that: (1) You provide accurate input data; (2) You use FLUXS for personal performance optimization only; (3) You will not reverse-engineer, copy, or redistribute FLUXS algorithms; (4) FLUXS is provided "as-is" without warranties; (5) We are not liable for decisions made based on flux assessments.</p>
-
-            <h3 style="color: #06b6d4; margin-top: 30px; margin-bottom: 15px;">Data Privacy</h3>
-            <p>Your assessment data is encrypted and stored securely. We do not sell, share, or monetize your personal data. Data retention: active access period + 30 days post-expiration, then automatic deletion.</p>
-
-            <h3 style="color: #06b6d4; margin-top: 30px; margin-bottom: 15px;">Intellectual Property</h3>
-            <p>FLUXS, its algorithms, interface, and branding are proprietary. All rights reserved. Unauthorized reproduction or distribution is prohibited.</p>
-
-            <button class="btn btn-primary" style="margin-top: 30px;" onclick="closeModal()">Close</button>
-        </div>
-    </div>
-
-    <!-- FOOTER -->
-    <div class="footer">
-        <div class="footer-content">
-            <div class="footer-section">
-                <h3>About FLUXS</h3>
-                <p>FLUXS is a peak state detection operating system built for executives, founders, and transformation leaders. Optimize your performance window with real-time flux assessment.</p>
+    <!-- ===== PRICING SECTION (BELOW HERO) ===== -->
+    <div class="pricing-section">
+        <h2 class="pricing-title">Simple Pricing</h2>
+        
+        <div class="pricing-cards">
+            <!-- Solo Tier -->
+            <div class="pricing-card">
+                <div class="pricing-name">Solo</div>
+                <div class="pricing-amount">£99</div>
+                <div class="pricing-period">/month</div>
+                <div class="pricing-features">
+                    ✓ Unlimited assessments<br>
+                    ✓ Peak window detection<br>
+                    ✓ 30-day history<br>
+                    ✓ Email support
+                </div>
+                <button class="pricing-cta" onclick="window.open('https://buy.stripe.com/cNibJ30jz2oSaYy0Iy3VC03')">
+                    Get Started
+                </button>
             </div>
-            <div class="footer-section">
-                <h3>Quick Links</h3>
-                <a onclick="scrollToSection('assessment')">Assess Now</a><br>
-                <a onclick="scrollToSection('pricing')">View Pricing</a><br>
-                <a onclick="scrollToSection('faq')">FAQs</a><br>
-                <a onclick="openModal('disclaimer')">Legal</a>
+
+            <!-- Team Tier -->
+            <div class="pricing-card">
+                <div class="pricing-name">Team ⭐</div>
+                <div class="pricing-amount">£499</div>
+                <div class="pricing-period">/month</div>
+                <div class="pricing-features">
+                    ✓ Everything in Solo<br>
+                    ✓ 5 team members<br>
+                    ✓ Team analytics<br>
+                    ✓ Priority support
+                </div>
+                <button class="pricing-cta" onclick="window.open('https://buy.stripe.com/3cI28t4zP8Ng1nY0Iy3VC04')">
+                    Get Started
+                </button>
             </div>
-            <div class="footer-section">
-                <h3>Framework</h3>
-                <p>Built on the iLead The Way framework for identity-first growth and alignment. Learn more: <a href="https://ileadtheway.co.uk" target="_blank">ileadtheway.co.uk</a></p>
-            </div>
-            <div class="footer-section">
-                <h3>Founder</h3>
-                <p><strong>Bopolo</strong> - System Architect, Founder<br>Building machines for peak performance. UK-based entrepreneur, real estate investor, AI-powered SaaS builder.<br><a href="https://twitter.com/bopolo" target="_blank">@bopolo</a></p>
-            </div>
-        </div>
-        <div class="footer-bottom">
-            <p class="copyright">© 2026 FLUXS. All rights reserved. Built with precision for peak performance.</p>
-            <div style="font-size: 11px; color: #64748b;">
-                <a href="#" onclick="openModal('disclaimer')" style="color: #94a3b8; text-decoration: none;">Terms & Privacy</a> | 
-                <a href="https://ileadtheway.co.uk" target="_blank" style="color: #94a3b8; text-decoration: none;">iLead Framework</a>
+
+            <!-- Legacy Tier -->
+            <div class="pricing-card">
+                <div class="pricing-name">Legacy</div>
+                <div class="pricing-amount">£999</div>
+                <div class="pricing-period">/month</div>
+                <div class="pricing-features">
+                    ✓ Everything in Team<br>
+                    ✓ 20+ team members<br>
+                    ✓ Custom integrations<br>
+                    ✓ Dedicated support
+                </div>
+                <button class="pricing-cta" onclick="window.open('https://buy.stripe.com/3cI9AV4zP3sWd6Gbnc3VC05')">
+                    Get Started
+                </button>
             </div>
         </div>
     </div>
 
+    <!-- ===== JAVASCRIPT ===== -->
     <script>
-        function calculateFlux() {
-            const sleep = parseFloat(document.getElementById('sleep').value);
-            const mood = parseFloat(document.getElementById('mood').value);
-            const energy = parseFloat(document.getElementById('energy').value);
-            const focus = document.getElementById('focus').value;
-            const interruptions = parseFloat(document.getElementById('interruptions').value);
-
-            const sleepScore = (sleep / 5) * 0.2;
-            const moodScore = (mood / 10) * 0.25;
-            const energyScore = (energy / 10) * 0.25;
-            const focusMap = { high: 1.0, medium: 0.7, low: 0.3 };
-            const focusScore = focusMap[focus] * 0.15;
-            const interruptScore = (1 - Math.min(interruptions * 0.15, 0.6)) * 0.15;
-
-            let flux = (sleepScore + moodScore + energyScore + focusScore + interruptScore) * 5;
-            flux = Math.max(1.0, Math.min(5.0, flux));
-
-            displayFluxResult(flux);
-        }
-
-        function displayFluxResult(flux) {
-            const levels = [
-                { min: 1.0, max: 1.4, name: 'CRITICAL🔴', desc: 'Performance is compromised. Rest and recovery needed.' },
-                { min: 1.5, max: 2.4, name: 'LOW🟠', desc: 'Below optimal. Consider light tasks or preparation.' },
-                { min: 2.5, max: 3.4, name: 'MEDIUM🟡', desc: 'Moderate performance. Productive but not peak.' },
-                { min: 3.5, max: 4.4, name: 'HIGH💪', desc: 'Strong performance. Execute high-value work now.' },
-                { min: 4.5, max: 4.9, name: 'PEAK⭐', desc: 'Exceptional state. Maximum execution window.' },
-                { min: 5.0, max: 5.0, name: 'EUREKA💥', desc: 'Perfect alignment. You are unstoppable.' }
-            ];
-
-            const level = levels.find(l => flux >= l.min && flux <= l.max);
-
-            document.getElementById('fluxScore').textContent = flux.toFixed(1);
-            document.getElementById('fluxLevel').textContent = level.name;
-            document.getElementById('fluxDescription').textContent = level.desc;
-
-            document.getElementById('assessmentScreen').classList.remove('active');
-            document.getElementById('resultScreen').classList.add('active');
-            
-            // FIXED: Removed auto-redirect. Users can now click "Try 7-Day" or "Continue to Pricing"
-        }
-
-        function showPricingFromResult() {
-            document.getElementById('resultScreen').classList.remove('active');
-            document.getElementById('pricingScreen').classList.add('active');
-            scrollToTop();
-        }
-
-        function resetAssessment() {
-            document.getElementById('assessmentScreen').classList.add('active');
-            document.getElementById('resultScreen').classList.remove('active');
-            document.getElementById('pricingScreen').classList.remove('active');
-            scrollToTop();
-        }
-
-        function updateSlider(input) {
-            const id = input.id;
-            const value = input.value;
-            if (id === 'sleep') {
-                document.getElementById('sleepValue').textContent = value + ' hours';
-            } else if (id === 'mood') {
-                document.getElementById('moodValue').textContent = value;
-            } else if (id === 'energy') {
-                document.getElementById('energyValue').textContent = value;
-            }
-        }
-
-        function toggleFaq(element) {
-            element.parentElement.classList.toggle('open');
-            element.querySelector('.faq-toggle').textContent = element.parentElement.classList.contains('open') ? '−' : '+';
-        }
-
-        function openModal(type) {
-            document.getElementById('disclaimerModal').classList.add('open');
+        function openModal() {
+            document.getElementById('assessmentModal').classList.add('show');
         }
 
         function closeModal() {
-            document.getElementById('disclaimerModal').classList.remove('open');
+            document.getElementById('assessmentModal').classList.remove('show');
+            resetAssessment();
         }
 
-        function scrollToSection(id) {
-            const element = document.getElementById(id);
-            if (element) {
-                element.scrollIntoView({ behavior: 'smooth' });
-            }
+        function updateValue(id, value) {
+            document.getElementById(id).textContent = value;
         }
 
-        function scrollToTop() {
-            window.scrollTo({ top: 0, behavior: 'smooth' });
+        function resetAssessment() {
+            document.getElementById('assessmentForm').style.display = 'block';
+            document.getElementById('resultDisplay').classList.remove('show');
+            document.getElementById('sleep').value = 7;
+            document.getElementById('mood').value = 7;
+            document.getElementById('energy').value = 7;
+            document.getElementById('focus').value = 'medium';
+            document.getElementById('interruptions').value = 0;
+            updateValue('sleepValue', '7 hrs');
+            updateValue('moodValue', '7/10');
+            updateValue('energyValue', '7/10');
         }
 
-        document.getElementById('disclaimerModal').addEventListener('click', function(e) {
+        function detectFlux() {
+            const sleep = document.getElementById('sleep').value;
+            const mood = document.getElementById('mood').value;
+            const energy = document.getElementById('energy').value;
+            const focus = document.getElementById('focus').value;
+            const interruptions = document.getElementById('interruptions').value;
+
+            // Simple algorithm: higher values = later peak
+            const baseScore = (parseInt(sleep) + parseInt(mood) + parseInt(energy)) / 3;
+            let peakHour = 10;
+
+            if (baseScore < 5) peakHour = 14; // Afternoon peak
+            else if (baseScore < 7) peakHour = 11; // Late morning
+            else peakHour = 9; // Early morning
+
+            const peakEnd = peakHour + 1;
+            const peakWindow = `${peakHour}:00-${peakEnd}:00`;
+            const consistency = Math.min(95, Math.max(70, baseScore * 13.5));
+
+            // Show result
+            document.getElementById('assessmentForm').style.display = 'none';
+            document.getElementById('resultDisplay').classList.add('show');
+            document.getElementById('peakWindow').innerHTML = `${peakWindow} <span class="peak-emoji">⭐</span>`;
+            document.getElementById('resultDisplay').innerHTML = `
+                <div class="result-title">Your Peak Window</div>
+                <div class="peak-window">${peakWindow} <span class="peak-emoji">⭐</span></div>
+                <div class="consistency">Consistency: ${Math.round(consistency)}%</div>
+                
+                <div class="modal-buttons">
+                    <button class="cta-primary" onclick="goToDowsell()">
+                        Try 7-Day for £39
+                    </button>
+                    <button class="btn-secondary" onclick="goToPricing()">
+                        View Monthly Plans
+                    </button>
+                </div>
+            `;
+        }
+
+        function goToDowsell() {
+            window.open('https://buy.stripe.com/aFaaEZ6HX6F84AafDs3VC06');
+            closeModal();
+        }
+
+        function goToPricing() {
+            closeModal();
+            document.querySelector('.pricing-section').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // Close modal on outside click
+        document.getElementById('assessmentModal').addEventListener('click', function(e) {
             if (e.target === this) closeModal();
         });
-    
-        // ===== FLUX TRACKING & BUILDUP =====
-        const fluxHistory = JSON.parse(localStorage.getItem('fluxHistory') || '[]');
-
-        function saveFluxAssessment(flux, level) {
-            const now = new Date();
-            const entry = {
-                flux: Math.round(flux * 10) / 10,
-                level: level.name,
-                timestamp: now.getTime(),
-                date: now.toLocaleDateString(),
-                hour: now.getHours()
-            };
-            fluxHistory.push(entry);
-            localStorage.setItem('fluxHistory', JSON.stringify(fluxHistory));
-        }
-
-        function getFluxTrends() {
-            if (fluxHistory.length < 3) {
-                return null;
-            }
-
-            // Get last 7 days
-            const sevenDaysAgo = Date.now() - (7 * 24 * 60 * 60 * 1000);
-            const recentAssessments = fluxHistory.filter(a => a.timestamp > sevenDaysAgo);
-
-            if (recentAssessments.length === 0) return null;
-
-            // Calculate stats
-            const avgFlux = (recentAssessments.reduce((sum, a) => sum + a.flux, 0) / recentAssessments.length).toFixed(1);
-            
-            // Best day
-            const dayScores = {};
-            recentAssessments.forEach(a => {
-                if (!dayScores[a.date]) dayScores[a.date] = [];
-                dayScores[a.date].push(a.flux);
-            });
-            const avgByDay = Object.entries(dayScores).map(([date, scores]) => ({
-                date,
-                avg: (scores.reduce((a, b) => a + b) / scores.length).toFixed(1)
-            }));
-            const bestDay = avgByDay.sort((a, b) => b.avg - a.avg)[0];
-
-            // Peak hour
-            const hourScores = {};
-            recentAssessments.forEach(a => {
-                if (!hourScores[a.hour]) hourScores[a.hour] = [];
-                hourScores[a.hour].push(a.flux);
-            });
-            const avgByHour = Object.entries(hourScores)
-                .map(([hour, scores]) => ({
-                    hour: parseInt(hour),
-                    avg: (scores.reduce((a, b) => a + b) / scores.length).toFixed(1)
-                }))
-                .sort((a, b) => b.avg - a.avg);
-            const peakHour = avgByHour[0];
-            const peakHourNext = avgByHour[1];
-
-            // Consistency (% of assessments above 3.0)
-            const consistency = Math.round((recentAssessments.filter(a => a.flux >= 3.0).length / recentAssessments.length) * 100);
-
-            // Insight text
-            let insightText = '';
-            if (avgFlux >= 4) {
-                insightText = `🔥 You're running HOT. Average flux ${avgFlux}. Peak window: ${peakHour.hour}:00-${peakHour.hour + 1}:00. That's your execution zone.`;
-            } else if (avgFlux >= 3) {
-                insightText = `💪 Solid performance. Average flux ${avgFlux}. Your peak hits around ${peakHour.hour}:00. Best day: ${new Date(bestDay.date).toLocaleDateString('en-US', {weekday: 'short'})}.`;
-            } else {
-                insightText = `📊 Building momentum. Average flux ${avgFlux}. Track more days to unlock your peak window. Consistency: ${consistency}%.`;
-            }
-
-            return {
-                avgFlux,
-                bestDay: new Date(bestDay.date).toLocaleDateString('en-US', {weekday: 'short'}),
-                peakWindow: `${peakHour.hour}:00-${(peakHour.hour + 1) % 24}:00`,
-                consistency,
-                assessmentCount: recentAssessments.length,
-                insightText,
-                daily: recentAssessments.slice(-7)
-            };
-        }
-
-        function showTrendsIfEnough() {
-            if (fluxHistory.length >= 3) {
-                renderTrends();
-                document.getElementById('resultScreen').classList.remove('active');
-                document.getElementById('trendsScreen').classList.add('active');
-                setTimeout(() => {
-                    showPricingFromTrends();
-                }, 5000);
-            } else {
-                showPricingFromResult();
-            }
-        }
-
-        function renderTrends() {
-            const trends = getFluxTrends();
-            if (!trends) return;
-
-            // Render daily trend bars
-            const dailyDiv = document.getElementById('dailyTrend');
-            dailyDiv.innerHTML = trends.daily.map(d => `
-                <div style="text-align: center;">
-                    <div style="background: linear-gradient(180deg, #06b6d4 0%, #0ea5e9 100%); height: ${Math.round(d.flux / 5 * 100)}px; border-radius: 4px; margin-bottom: 8px;"></div>
-                    <div style="font-size: 11px; color: #94a3b8;">${new Date(d.timestamp).toLocaleDateString('en-US', {month: 'short', day: 'numeric'})}</div>
-                    <div style="font-size: 12px; color: #06b6d4; font-weight: 600;">${d.flux}</div>
-                </div>
-            `).join('');
-
-            // Update stats
-            document.getElementById('avgFlux').textContent = trends.avgFlux;
-            document.getElementById('bestDay').textContent = trends.bestDay;
-            document.getElementById('peakWindow').textContent = trends.peakWindow;
-            document.getElementById('consistency').textContent = trends.consistency + '%';
-            document.getElementById('insightText').textContent = trends.insightText;
-        }
-
-        function showPricingFromTrends() {
-            document.getElementById('trendsScreen').classList.remove('active');
-            document.getElementById('pricingScreen').classList.add('active');
-            scrollToTop();
-        }
-
-        function continueTesting() {
-            document.getElementById('trendsScreen').classList.remove('active');
-            document.getElementById('assessmentScreen').classList.add('active');
-            scrollToTop();
-        }
-
-        // Update displayFluxResult to save data
-        const originalDisplayFluxResult = displayFluxResult;
-        function displayFluxResult(flux) {
-            const levels = [
-                { min: 1.0, max: 1.4, name: 'CRITICAL🔴', desc: 'Performance is compromised. Rest and recovery needed.' },
-                { min: 1.5, max: 2.4, name: 'LOW🟠', desc: 'Below optimal. Consider light tasks or preparation.' },
-                { min: 2.5, max: 3.4, name: 'MEDIUM🟡', desc: 'Moderate performance. Productive but not peak.' },
-                { min: 3.5, max: 4.4, name: 'HIGH💪', desc: 'Strong performance. Execute high-value work now.' },
-                { min: 4.5, max: 4.9, name: 'PEAK⭐', desc: 'Exceptional state. Maximum execution window.' },
-                { min: 5.0, max: 5.0, name: 'EUREKA💥', desc: 'Perfect alignment. You are unstoppable.' }
-            ];
-            const level = levels.find(l => flux >= l.min && flux <= l.max);
-            
-            // Save to history
-            saveFluxAssessment(flux, level);
-
-            document.getElementById('fluxScore').textContent = flux.toFixed(1);
-            document.getElementById('fluxLevel').textContent = level.name;
-            document.getElementById('fluxDescription').textContent = level.desc;
-
-            document.getElementById('assessmentScreen').classList.remove('active');
-            document.getElementById('resultScreen').classList.add('active');
-
-            // Show trends if enough data, else go to pricing
-            setTimeout(() => {
-                showTrendsIfEnough();
-            }, 3000);
-        }
-
-    
-        // DOWNSELL FUNCTIONS
-        function showDownsell(tier) {
-            const prices = { solo: '£39', team: '£199', legacy: '£499' };
-            const checkoutLinks = {
-                solo: 'https://buy.stripe.com/test_cNibJ30jz2oSaYy0Iy3VC03',  // SOLO STARTER
-                team: 'https://buy.stripe.com/test_3cI28t4zP8Ng1nY0Iy3VC04', // TEAM STARTER
-                legacy: 'https://buy.stripe.com/test_3cI9AV4zP3sWd6Gbnc3VC05' // LEGACY STARTER
-            };
-            document.getElementById('downsellPrice').textContent = prices[tier];
-            document.getElementById('downsellBtn').onclick = function() {
-                goToStripeCheckout(checkoutLinks[tier]);
-            };
-            document.getElementById('downsellModal').style.display = 'flex';
-        }
-
-        function goToStripeCheckout(link) {
-            window.location.href = link;
-        }
-
     </script>
+
 </body>
 </html>
