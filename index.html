@@ -867,10 +867,8 @@
 
             document.getElementById('assessmentScreen').classList.remove('active');
             document.getElementById('resultScreen').classList.add('active');
-
-            setTimeout(() => {
-                showPricingFromResult();
-            }, 3000);
+            
+            // FIXED: Removed auto-redirect. Users can now click "Try 7-Day" or "Continue to Pricing"
         }
 
         function showPricingFromResult() {
