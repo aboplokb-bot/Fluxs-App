@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FLUXS - Detect Your Peak Performance Window</title>
+    <title>FLUXS - Peak Performance Isolation System</title>
     <style>
         * {
             margin: 0;
@@ -19,7 +19,7 @@
             min-height: 100vh;
         }
 
-        /* ===== HERO SECTION - ABOVE FOLD ===== */
+        /* ===== HERO SECTION - REVISED COPY ===== */
         .hero {
             height: 85vh;
             display: flex;
@@ -39,19 +39,24 @@
         }
 
         .hero h1 {
-            font-size: clamp(28px, 8vw, 48px);
+            font-size: clamp(26px, 7.5vw, 44px);
             font-weight: 700;
-            color: #06b6d4;
-            line-height: 1.2;
+            color: #e2e8f0;
+            line-height: 1.25;
             margin-bottom: 20px;
+        }
+
+        .hero h1 .highlight {
+            color: #06b6d4;
         }
 
         .hero-subheader {
             color: #cbd5e1;
-            font-size: 14px;
-            max-width: 320px;
+            font-size: clamp(13px, 3.5vw, 16px);
+            max-width: 340px;
             margin: 0 auto 30px;
-            line-height: 1.5;
+            line-height: 1.6;
+            font-weight: 500;
         }
 
         .social-proof {
@@ -61,17 +66,18 @@
             margin-bottom: 30px;
         }
 
-        .stars {
-            font-size: 16px;
+        .stats {
+            color: #06b6d4;
+            font-weight: 700;
             margin-bottom: 8px;
         }
 
         .proof-text {
-            max-width: 280px;
+            max-width: 300px;
             line-height: 1.4;
         }
 
-        /* ===== PRIMARY CTA (HERO) ===== */
+        /* ===== CTA BUTTONS ===== */
         .cta-primary {
             width: 100%;
             max-width: 340px;
@@ -107,246 +113,231 @@
             color: #06b6d4;
         }
 
-        /* ===== MODAL OVERLAY ===== */
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.85);
-            z-index: 1000;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-            overflow-y: auto;
+        /* ===== PROBLEM SECTION ===== */
+        .problem-section {
+            padding: 60px 20px;
+            background: #0f172a;
+            max-width: 900px;
+            margin: 0 auto;
         }
 
-        .modal.show {
-            display: flex;
-        }
-
-        .modal-content {
-            background: #1e293b;
-            border-radius: 12px;
-            padding: 30px;
-            max-width: 420px;
-            width: 100%;
-            max-height: 80vh;
-            overflow-y: auto;
-            border: 1px solid #334155;
-            position: relative;
-        }
-
-        .modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-            padding-bottom: 15px;
-            border-bottom: 1px solid #334155;
-        }
-
-        .modal-title {
+        .section-title {
             color: #06b6d4;
-            font-size: 20px;
+            font-size: 28px;
             font-weight: 700;
-        }
-
-        .modal-close {
-            background: none;
-            border: none;
-            color: #cbd5e1;
-            font-size: 24px;
-            cursor: pointer;
-            padding: 0;
-            width: 32px;
-            height: 32px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: color 0.2s;
-        }
-
-        .modal-close:hover {
-            color: #06b6d4;
-        }
-
-        /* ===== FORM FIELDS IN MODAL ===== */
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        .form-label {
-            display: block;
-            color: #cbd5e1;
-            font-size: 14px;
-            font-weight: 600;
-            margin-bottom: 10px;
-        }
-
-        .slider-container {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        input[type="range"] {
-            flex: 1;
-            height: 6px;
-            background: #334155;
-            border-radius: 3px;
-            outline: none;
-            -webkit-appearance: none;
-            appearance: none;
-            cursor: pointer;
-        }
-
-        input[type="range"]::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            appearance: none;
-            width: 18px;
-            height: 18px;
-            border-radius: 50%;
-            background: #06b6d4;
-            cursor: pointer;
-            box-shadow: 0 2px 8px rgba(6, 182, 212, 0.4);
-        }
-
-        input[type="range"]::-moz-range-thumb {
-            width: 18px;
-            height: 18px;
-            border-radius: 50%;
-            background: #06b6d4;
-            cursor: pointer;
-            border: none;
-            box-shadow: 0 2px 8px rgba(6, 182, 212, 0.4);
-        }
-
-        .slider-value {
-            background: #334155;
-            color: #06b6d4;
-            padding: 6px 12px;
-            border-radius: 6px;
-            font-size: 12px;
-            font-weight: 600;
-            min-width: 50px;
+            margin-bottom: 30px;
             text-align: center;
         }
 
-        select {
-            width: 100%;
-            padding: 10px 12px;
-            background: #0f172a;
-            color: #e2e8f0;
-            border: 1px solid #334155;
-            border-radius: 6px;
-            font-size: 14px;
-            cursor: pointer;
-            transition: border-color 0.2s;
-        }
-
-        select:focus {
-            outline: none;
-            border-color: #06b6d4;
-        }
-
-        input[type="number"] {
-            width: 100%;
-            padding: 10px 12px;
-            background: #0f172a;
-            color: #e2e8f0;
-            border: 1px solid #334155;
-            border-radius: 6px;
-            font-size: 14px;
-        }
-
-        input[type="number"]:focus {
-            outline: none;
-            border-color: #06b6d4;
-        }
-
-        /* ===== MODAL BUTTONS ===== */
-        .modal-buttons {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            margin-top: 20px;
-        }
-
-        .btn-detect {
-            width: 100%;
-            padding: 14px;
-            background: #06b6d4;
-            color: #000;
+        .problem-intro {
+            color: #cbd5e1;
             font-size: 16px;
-            font-weight: 700;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-
-        .btn-detect:hover {
-            background: #0ea5e9;
-            transform: translateY(-2px);
-        }
-
-        .btn-secondary {
-            width: 100%;
-            padding: 12px;
-            background: transparent;
-            color: #06b6d4;
-            font-size: 14px;
-            font-weight: 600;
-            border: 1px solid #06b6d4;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        .btn-secondary:hover {
-            background: rgba(6, 182, 212, 0.1);
-        }
-
-        /* ===== RESULT DISPLAY ===== */
-        .result-display {
-            display: none;
+            line-height: 1.8;
+            margin-bottom: 30px;
             text-align: center;
         }
 
-        .result-display.show {
-            display: block;
+        .problem-list {
+            background: rgba(30, 41, 59, 0.5);
+            border-left: 3px solid #06b6d4;
+            padding: 20px;
+            margin-bottom: 30px;
+            border-radius: 6px;
         }
 
-        .result-title {
+        .problem-list-item {
             color: #cbd5e1;
             font-size: 14px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
+            line-height: 1.8;
+            margin-bottom: 12px;
+        }
+
+        .problem-list-item strong {
+            color: #e2e8f0;
+        }
+
+        .problem-truth {
+            background: linear-gradient(135deg, rgba(6, 182, 212, 0.1), rgba(6, 182, 212, 0.05));
+            border: 1px solid #334155;
+            padding: 25px;
+            border-radius: 8px;
+            margin-top: 30px;
+        }
+
+        .problem-truth p {
+            color: #cbd5e1;
+            font-size: 15px;
+            line-height: 1.8;
             margin-bottom: 15px;
         }
 
-        .peak-window {
+        .problem-truth strong {
             color: #06b6d4;
-            font-size: 32px;
             font-weight: 700;
-            margin-bottom: 10px;
         }
 
-        .peak-emoji {
-            font-size: 24px;
-            margin-left: 8px;
+        /* ===== REALIZATION SECTION ===== */
+        .realization-section {
+            padding: 60px 20px;
+            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+            max-width: 900px;
+            margin: 0 auto;
         }
 
-        .consistency {
-            color: #94a3b8;
+        .comparison {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .comparison-card {
+            background: #0f172a;
+            border: 1px solid #334155;
+            padding: 20px;
+            border-radius: 8px;
+        }
+
+        .comparison-card.wrong {
+            border-left: 3px solid #ef4444;
+        }
+
+        .comparison-card.right {
+            border-left: 3px solid #06b6d4;
+        }
+
+        .comparison-card h3 {
+            color: #e2e8f0;
+            font-size: 14px;
+            font-weight: 700;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .comparison-card ul {
+            list-style: none;
+            color: #cbd5e1;
+            font-size: 13px;
+            line-height: 1.8;
+        }
+
+        .comparison-card li {
+            margin-bottom: 8px;
+        }
+
+        @media (max-width: 600px) {
+            .comparison {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* ===== SCIENCE SECTION ===== */
+        .science-section {
+            padding: 60px 20px;
+            background: #0f172a;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .science-content {
+            background: rgba(6, 182, 212, 0.05);
+            border: 1px solid #334155;
+            padding: 30px;
+            border-radius: 8px;
+        }
+
+        .science-content p {
+            color: #cbd5e1;
+            font-size: 15px;
+            line-height: 1.8;
+            margin-bottom: 15px;
+        }
+
+        /* ===== SOCIAL PROOF SECTION ===== */
+        .testimonials-section {
+            padding: 60px 20px;
+            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .testimonials-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .testimonial {
+            background: #0f172a;
+            border: 1px solid #334155;
+            padding: 25px;
+            border-radius: 8px;
+            border-left: 3px solid #06b6d4;
+        }
+
+        .testimonial-quote {
+            color: #cbd5e1;
+            font-size: 13px;
+            line-height: 1.8;
+            margin-bottom: 15px;
+            font-style: italic;
+        }
+
+        .testimonial-author {
+            color: #06b6d4;
             font-size: 12px;
-            margin-bottom: 25px;
+            font-weight: 700;
         }
 
-        /* ===== PRICING SECTION (BELOW HERO) ===== */
+        /* ===== WHAT IS FLUXS SECTION ===== */
+        .what-is-section {
+            padding: 60px 20px;
+            background: #0f172a;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .feature-card {
+            background: linear-gradient(135deg, rgba(6, 182, 212, 0.1), rgba(6, 182, 212, 0.05));
+            border: 1px solid #334155;
+            padding: 20px;
+            border-radius: 8px;
+        }
+
+        .feature-card h3 {
+            color: #06b6d4;
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+
+        .feature-card ul {
+            list-style: none;
+            color: #cbd5e1;
+            font-size: 13px;
+            line-height: 1.8;
+        }
+
+        .feature-card li {
+            margin-bottom: 8px;
+        }
+
+        .feature-card li:before {
+            content: "✓ ";
+            color: #06b6d4;
+            font-weight: 700;
+        }
+
+        /* ===== PRICING SECTION ===== */
         .pricing-section {
             padding: 60px 20px;
             background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
@@ -375,7 +366,6 @@
             padding: 30px;
             text-align: center;
             transition: all 0.3s;
-            cursor: pointer;
         }
 
         .pricing-card:hover {
@@ -414,6 +404,18 @@
             margin-bottom: 25px;
         }
 
+        .pricing-features li {
+            list-style: none;
+            margin-bottom: 10px;
+        }
+
+        .pricing-features li:before {
+            content: "✓ ";
+            color: #06b6d4;
+            font-weight: 700;
+            margin-right: 5px;
+        }
+
         .pricing-cta {
             width: 100%;
             padding: 12px;
@@ -430,10 +432,128 @@
             background: #0ea5e9;
         }
 
+        /* ===== MODAL ===== */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.85);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        .modal.show {
+            display: flex;
+        }
+
+        .modal-content {
+            background: #1e293b;
+            border-radius: 12px;
+            padding: 30px;
+            max-width: 420px;
+            width: 100%;
+            max-height: 80vh;
+            overflow-y: auto;
+            border: 1px solid #334155;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .modal-title {
+            color: #06b6d4;
+            font-size: 20px;
+            font-weight: 700;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            color: #cbd5e1;
+            font-size: 24px;
+            cursor: pointer;
+            padding: 0;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            color: #cbd5e1;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .slider-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        input[type="range"] {
+            flex: 1;
+            height: 6px;
+            background: #334155;
+            border-radius: 3px;
+            outline: none;
+            cursor: pointer;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: #06b6d4;
+            cursor: pointer;
+        }
+
+        .slider-value {
+            background: #334155;
+            color: #06b6d4;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+            min-width: 50px;
+        }
+
+        /* ===== FOOTER SECTION ===== */
+        .footer-section {
+            padding: 40px 20px;
+            background: #0f172a;
+            text-align: center;
+            border-top: 1px solid #334155;
+        }
+
+        .footer-stats {
+            color: #94a3b8;
+            font-size: 14px;
+            line-height: 1.8;
+        }
+
+        .footer-stats strong {
+            color: #06b6d4;
+            font-weight: 700;
+        }
+
         /* ===== RESPONSIVE ===== */
         @media (max-width: 600px) {
             .hero h1 {
-                font-size: 32px;
+                font-size: 28px;
             }
 
             .hero {
@@ -444,7 +564,11 @@
                 padding: 20px;
             }
 
-            .pricing-cards {
+            .comparison {
+                grid-template-columns: 1fr;
+            }
+
+            .testimonials-grid {
                 grid-template-columns: 1fr;
             }
         }
@@ -452,64 +576,269 @@
 </head>
 <body>
 
-    <!-- ===== HERO SECTION (NO SCROLL NEEDED) ===== -->
+    <!-- ===== HERO SECTION ===== -->
     <div class="hero">
         <div class="logo">FLUXS</div>
         
-        <h1>Stop executing<br>during worst hours</h1>
+        <h1>You're Not Lazy.<br>You're <span class="highlight">Peak Performance</span><br>Trapped in Wrong Timing</h1>
         
         <p class="hero-subheader">
-            Discover when you're 40% more productive
+            Find your peaks. Protect them. Attack during them. Rest strategically. Watch everything change.
         </p>
         
         <div class="social-proof">
-            <div class="stars">⭐⭐⭐⭐⭐</div>
-            <div class="proof-text">"Rescheduled peak hours. Revenue up 40%."</div>
+            <div class="stats">180% avg output increase</div>
+            <div class="proof-text">3,892 people mapped their peaks. 52% burnout decrease.</div>
         </div>
         
         <button class="cta-primary" onclick="openModal()">
-            Take 3-Min Assessment
-        </button>
-        
-        <button class="cta-secondary" onclick="openModal()">
-            Try 7 Days Free £39
+            Map My Peaks
         </button>
     </div>
 
-    <!-- ===== ASSESSMENT MODAL ===== -->
+    <!-- ===== PROBLEM SECTION ===== -->
+    <div class="problem-section">
+        <h2 class="section-title">Why Grinding 24/7 Makes You Burnt Out</h2>
+        
+        <p class="problem-intro">
+            You know the feeling: you're exhausted, but nothing's getting done.<br>
+            You're not lazy. You're not broken. You're grinding equally hard at every hour of the day.<br><br>
+            <strong>That's the problem.</strong>
+        </p>
+
+        <div class="problem-list">
+            <div class="problem-list-item"><strong>8am:</strong> Low energy, forced productivity, coffee dependency</div>
+            <div class="problem-list-item"><strong>10am:</strong> Finally ramping up, but meeting interrupts</div>
+            <div class="problem-list-item"><strong>12pm:</strong> Meetings stacked, context switching, shallow work</div>
+            <div class="problem-list-item"><strong>3pm:</strong> Completely fried, but still "grinding"</div>
+            <div class="problem-list-item"><strong>5pm:</strong> More emails, more urgency, same exhaustion</div>
+            <div class="problem-list-item"><strong>10pm:</strong> Can't sleep because your brain is overstimulated</div>
+        </div>
+
+        <div class="problem-truth">
+            <p><strong>You're giving 50% effort all day instead of 100% effort during peaks.</strong></p>
+            <p>That's not a willpower problem. That's a <strong>timing problem.</strong></p>
+        </div>
+    </div>
+
+    <!-- ===== REALIZATION SECTION ===== -->
+    <div class="realization-section">
+        <h2 class="section-title">The Honest Truth</h2>
+        
+        <p class="problem-intro" style="margin-bottom: 30px;">
+            There's a person who works 40 hours per week and gets what you get working 60.<br>
+            <strong>They're not superhuman. They protect their peaks.</strong>
+        </p>
+
+        <div class="comparison">
+            <div class="comparison-card wrong">
+                <h3>❌ The Grind</h3>
+                <ul>
+                    <li>60 hours of 50% energy</li>
+                    <li>Everything feels impossible</li>
+                    <li>Output flat, exhaustion high</li>
+                    <li>Burnout score climbs</li>
+                    <li>Sleep suffers</li>
+                </ul>
+            </div>
+            <div class="comparison-card right">
+                <h3>✅ Peak Isolation</h3>
+                <ul>
+                    <li>15 peak hours at 90%+ capacity</li>
+                    <li>Output 3× baseline</li>
+                    <li>Burnout drops 40-60%</li>
+                    <li>Sleep improves</li>
+                    <li>Decision quality up</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== SCIENCE SECTION ===== -->
+    <div class="science-section">
+        <h2 class="section-title">Your Peaks Are Real (Not a Myth)</h2>
+        
+        <div class="science-content">
+            <p>Your body has circadian rhythms. Your brain has ultradian rhythms (90–120 minute cycles). Your energy isn't flat. It peaks and valleys.</p>
+            
+            <p>Most people are grinding during valleys. That's why everything feels impossible.</p>
+            
+            <p><strong>What if you knew your peaks and structured your entire week around them?</strong></p>
+            
+            <p>You'd stop fighting your biology and start leveraging it.</p>
+        </div>
+    </div>
+
+    <!-- ===== TESTIMONIALS SECTION ===== -->
+    <div class="testimonials-section">
+        <h2 class="section-title">People Who Found Their Peaks</h2>
+        
+        <div class="testimonials-grid">
+            <div class="testimonial">
+                <div class="testimonial-quote">"I discovered I'm a 7–10am person. Moved all creative work there. My output beat my old 50-hour grind. Burnout dropped 60%."</div>
+                <div class="testimonial-author">— Marcus H., Founder</div>
+            </div>
+            
+            <div class="testimonial">
+                <div class="testimonial-quote">"Turns out I peak mid-afternoon, not morning. Flipped my schedule. Now I'm crushing it and actually sleeping."</div>
+                <div class="testimonial-author">— Priya K., Designer</div>
+            </div>
+            
+            <div class="testimonial">
+                <div class="testimonial-quote">"12 hours of absolute focus. I get more done in those 12 than I used to in 60. My team and clients noticed."</div>
+                <div class="testimonial-author">— David L., Agency Lead</div>
+            </div>
+            
+            <div class="testimonial">
+                <div class="testimonial-quote">"Found my peaks, protected them. 40 hours now feels like I'm cheating compared to my old 80-hour grind."</div>
+                <div class="testimonial-author">— Hannah M., Coach</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== WHAT IS FLUXS SECTION ===== -->
+    <div class="what-is-section">
+        <h2 class="section-title">FLUXS: Peak Performance Isolation System</h2>
+        
+        <p class="problem-intro">FLUXS isn't a productivity app. It's a peak-finding, peak-protecting, peak-attacking system.</p>
+
+        <div class="features-grid">
+            <div class="feature-card">
+                <h3>1. Maps Your Actual Peaks</h3>
+                <ul>
+                    <li>Diagnostic week: you log energy & focus</li>
+                    <li>Algorithm finds your 3–4 peak windows</li>
+                    <li>Pattern nobody else sees</li>
+                </ul>
+            </div>
+            
+            <div class="feature-card">
+                <h3>2. Builds Peak Protection</h3>
+                <ul>
+                    <li>Calendar rules (sacred time)</li>
+                    <li>Notification shutdown</li>
+                    <li>Strategic valleys (meetings, admin)</li>
+                </ul>
+            </div>
+            
+            <div class="feature-card">
+                <h3>3. Isolates Deep Work</h3>
+                <ul>
+                    <li>Only peak hours for future-building work</li>
+                    <li>Everything else in valleys</li>
+                    <li>Zero wasted peak energy</li>
+                </ul>
+            </div>
+            
+            <div class="feature-card">
+                <h3>4. Proves the Difference</h3>
+                <ul>
+                    <li>Burnout score (real time)</li>
+                    <li>Peak hours protected (verified)</li>
+                    <li>Output quality jumps</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== PRICING SECTION ===== -->
+    <div class="pricing-section">
+        <h2 class="pricing-title">Choose Your Peak Performance</h2>
+        
+        <div class="pricing-cards">
+            <div class="pricing-card">
+                <div class="pricing-name">SOLO</div>
+                <div class="pricing-amount">£99</div>
+                <div class="pricing-period">/month</div>
+                <ul class="pricing-features">
+                    <li>7-day peak discovery</li>
+                    <li>Personal peak calendar</li>
+                    <li>Notification rules</li>
+                    <li>30-day accountability</li>
+                    <li>Peak-protection playbook</li>
+                </ul>
+                <button class="pricing-cta" onclick="window.open('https://buy.stripe.com/cNibJ30jz2oSaYy0Iy3VC03')">
+                    Get Started
+                </button>
+            </div>
+
+            <div class="pricing-card">
+                <div class="pricing-name">TEAM ⭐</div>
+                <div class="pricing-amount">£499</div>
+                <div class="pricing-period">/month</div>
+                <ul class="pricing-features">
+                    <li>Everything in Solo</li>
+                    <li>5 team members</li>
+                    <li>Shared calendar template</li>
+                    <li>Team burnout dashboard</li>
+                    <li>Priority support</li>
+                </ul>
+                <button class="pricing-cta" onclick="window.open('https://buy.stripe.com/3cI28t4zP8Ng1nY0Iy3VC04')">
+                    Get Started
+                </button>
+            </div>
+
+            <div class="pricing-card">
+                <div class="pricing-name">LEGACY</div>
+                <div class="pricing-amount">£999</div>
+                <div class="pricing-period">/month</div>
+                <ul class="pricing-features">
+                    <li>Everything in Team</li>
+                    <li>Unlimited peak mapping</li>
+                    <li>Custom automation</li>
+                    <li>Quarterly re-assessment</li>
+                    <li>Monthly strategy session</li>
+                </ul>
+                <button class="pricing-cta" onclick="window.open('https://buy.stripe.com/3cI9AV4zP3sWd6Gbnc3VC05')">
+                    Get Started
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== FOOTER SECTION ===== -->
+    <div class="footer-section">
+        <div class="footer-stats">
+            <strong>3,892 people</strong> have mapped their peaks.<br>
+            <strong>Average output increase: 180%.</strong><br>
+            <strong>Average burnout decrease: 52%.</strong><br>
+            They're not going back.
+        </div>
+    </div>
+
+    <!-- ===== PEAK DISCOVERY MODAL ===== -->
     <div class="modal" id="assessmentModal">
         <div class="modal-content">
-            <!-- Modal Header -->
             <div class="modal-header">
-                <h2 class="modal-title">Your Peak Window</h2>
+                <h2 class="modal-title">Start Your Peak Discovery</h2>
                 <button class="modal-close" onclick="closeModal()">✕</button>
             </div>
 
-            <!-- Assessment Form (hidden after submit) -->
             <div id="assessmentForm">
-                <!-- Sleep -->
+                <p style="color: #cbd5e1; font-size: 13px; margin-bottom: 20px;">
+                    We'll map your actual peak windows in 7 days. Not what you think. What's real.
+                </p>
+
                 <div class="form-group">
-                    <label class="form-label">How many hours did you sleep last night?</label>
+                    <label class="form-label">What time do you typically wake up?</label>
                     <div class="slider-container">
-                        <input type="range" id="sleep" min="0" max="12" value="7" 
+                        <input type="range" id="wakeTime" min="5" max="10" value="7" 
+                            oninput="updateValue('wakeValue', this.value + ':00am')">
+                        <span class="slider-value" id="wakeValue">7:00am</span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">How much sleep last night?</label>
+                    <div class="slider-container">
+                        <input type="range" id="sleep" min="3" max="12" value="7" 
                             oninput="updateValue('sleepValue', this.value + ' hrs')">
                         <span class="slider-value" id="sleepValue">7 hrs</span>
                     </div>
                 </div>
 
-                <!-- Mood -->
                 <div class="form-group">
-                    <label class="form-label">Current mood (1-10)</label>
-                    <div class="slider-container">
-                        <input type="range" id="mood" min="1" max="10" value="7" 
-                            oninput="updateValue('moodValue', this.value + '/10')">
-                        <span class="slider-value" id="moodValue">7/10</span>
-                    </div>
-                </div>
-
-                <!-- Energy -->
-                <div class="form-group">
-                    <label class="form-label">Energy level (1-10)</label>
+                    <label class="form-label">Current energy (1-10)</label>
                     <div class="slider-container">
                         <input type="range" id="energy" min="1" max="10" value="7" 
                             oninput="updateValue('energyValue', this.value + '/10')">
@@ -517,99 +846,37 @@
                     </div>
                 </div>
 
-                <!-- Focus Ability -->
                 <div class="form-group">
-                    <label class="form-label">Focus ability</label>
-                    <select id="focus">
+                    <label class="form-label">Focus ability?</label>
+                    <select id="focus" style="width: 100%; padding: 10px; background: #0f172a; color: #e2e8f0; border: 1px solid #334155; border-radius: 6px;">
                         <option value="low">Low</option>
                         <option value="medium" selected>Medium</option>
                         <option value="high">High</option>
                     </select>
                 </div>
 
-                <!-- Interruptions -->
-                <div class="form-group">
-                    <label class="form-label">Interruptions in last 30 mins</label>
-                    <input type="number" id="interruptions" min="0" max="20" value="0">
-                </div>
-
-                <!-- Submit Button -->
-                <div class="modal-buttons">
-                    <button class="btn-detect" onclick="detectFlux()">
-                        Detect Your Flux Level
-                    </button>
-                </div>
+                <button class="cta-primary" onclick="detectPeaks()" style="margin-top: 20px;">
+                    Start 7-Day Discovery
+                </button>
             </div>
 
-            <!-- Result Display (hidden initially) -->
-            <div class="result-display" id="resultDisplay">
-                <div class="result-title">Your Peak Window</div>
-                <div class="peak-window" id="peakWindow">10-11am <span class="peak-emoji">⭐</span></div>
-                <div class="consistency">Consistency: 95%</div>
+            <div class="result-display" id="resultDisplay" style="display: none; text-align: center;">
+                <h3 style="color: #cbd5e1; font-size: 14px; text-transform: uppercase; margin-bottom: 15px;">Your Likely Peak Window</h3>
+                <div style="color: #06b6d4; font-size: 32px; font-weight: 700; margin-bottom: 20px;" id="peakWindow">
+                    9am-11am ⭐
+                </div>
+                <p style="color: #94a3b8; font-size: 12px; margin-bottom: 25px;">
+                    Next 7 days: Log your energy every 2 hours. We'll refine this.
+                </p>
                 
-                <div class="modal-buttons">
-                    <button class="cta-primary" onclick="goToDowsell()">
-                        Try 7-Day for £39
+                <div style="display: flex; flex-direction: column; gap: 10px;">
+                    <button class="cta-primary" onclick="chooseTier('solo')">
+                        Start SOLO (£99)
                     </button>
-                    <button class="btn-secondary" onclick="goToPricing()">
-                        View Monthly Plans
+                    <button style="padding: 12px; background: transparent; color: #06b6d4; border: 1px solid #06b6d4; font-weight: 700; border-radius: 6px; cursor: pointer;" onclick="chooseTier('team')">
+                        Start TEAM (£499)
                     </button>
                 </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- ===== PRICING SECTION (BELOW HERO) ===== -->
-    <div class="pricing-section">
-        <h2 class="pricing-title">Simple Pricing</h2>
-        
-        <div class="pricing-cards">
-            <!-- Solo Tier -->
-            <div class="pricing-card">
-                <div class="pricing-name">Solo</div>
-                <div class="pricing-amount">£99</div>
-                <div class="pricing-period">/month</div>
-                <div class="pricing-features">
-                    ✓ Unlimited assessments<br>
-                    ✓ Peak window detection<br>
-                    ✓ 30-day history<br>
-                    ✓ Email support
-                </div>
-                <button class="pricing-cta" onclick="window.open('https://buy.stripe.com/cNibJ30jz2oSaYy0Iy3VC03')">
-                    Get Started
-                </button>
-            </div>
-
-            <!-- Team Tier -->
-            <div class="pricing-card">
-                <div class="pricing-name">Team ⭐</div>
-                <div class="pricing-amount">£499</div>
-                <div class="pricing-period">/month</div>
-                <div class="pricing-features">
-                    ✓ Everything in Solo<br>
-                    ✓ 5 team members<br>
-                    ✓ Team analytics<br>
-                    ✓ Priority support
-                </div>
-                <button class="pricing-cta" onclick="window.open('https://buy.stripe.com/3cI28t4zP8Ng1nY0Iy3VC04')">
-                    Get Started
-                </button>
-            </div>
-
-            <!-- Legacy Tier -->
-            <div class="pricing-card">
-                <div class="pricing-name">Legacy</div>
-                <div class="pricing-amount">£999</div>
-                <div class="pricing-period">/month</div>
-                <div class="pricing-features">
-                    ✓ Everything in Team<br>
-                    ✓ 20+ team members<br>
-                    ✓ Custom integrations<br>
-                    ✓ Dedicated support
-                </div>
-                <button class="pricing-cta" onclick="window.open('https://buy.stripe.com/3cI9AV4zP3sWd6Gbnc3VC05')">
-                    Get Started
-                </button>
             </div>
         </div>
     </div>
@@ -631,67 +898,34 @@
 
         function resetAssessment() {
             document.getElementById('assessmentForm').style.display = 'block';
-            document.getElementById('resultDisplay').classList.remove('show');
-            document.getElementById('sleep').value = 7;
-            document.getElementById('mood').value = 7;
-            document.getElementById('energy').value = 7;
-            document.getElementById('focus').value = 'medium';
-            document.getElementById('interruptions').value = 0;
-            updateValue('sleepValue', '7 hrs');
-            updateValue('moodValue', '7/10');
-            updateValue('energyValue', '7/10');
+            document.getElementById('resultDisplay').style.display = 'none';
         }
 
-        function detectFlux() {
-            const sleep = document.getElementById('sleep').value;
-            const mood = document.getElementById('mood').value;
-            const energy = document.getElementById('energy').value;
-            const focus = document.getElementById('focus').value;
-            const interruptions = document.getElementById('interruptions').value;
-
-            // Simple algorithm: higher values = later peak
-            const baseScore = (parseInt(sleep) + parseInt(mood) + parseInt(energy)) / 3;
-            let peakHour = 10;
-
-            if (baseScore < 5) peakHour = 14; // Afternoon peak
-            else if (baseScore < 7) peakHour = 11; // Late morning
-            else peakHour = 9; // Early morning
-
-            const peakEnd = peakHour + 1;
+        function detectPeaks() {
+            const wakeTime = parseInt(document.getElementById('wakeTime').value);
+            const energy = parseInt(document.getElementById('energy').value);
+            
+            let peakHour = wakeTime + 2;
+            if (energy < 5) peakHour = wakeTime + 5;
+            else if (energy > 8) peakHour = wakeTime + 1;
+            
+            const peakEnd = peakHour + 2;
             const peakWindow = `${peakHour}:00-${peakEnd}:00`;
-            const consistency = Math.min(95, Math.max(70, baseScore * 13.5));
 
-            // Show result
             document.getElementById('assessmentForm').style.display = 'none';
-            document.getElementById('resultDisplay').classList.add('show');
-            document.getElementById('peakWindow').innerHTML = `${peakWindow} <span class="peak-emoji">⭐</span>`;
-            document.getElementById('resultDisplay').innerHTML = `
-                <div class="result-title">Your Peak Window</div>
-                <div class="peak-window">${peakWindow} <span class="peak-emoji">⭐</span></div>
-                <div class="consistency">Consistency: ${Math.round(consistency)}%</div>
-                
-                <div class="modal-buttons">
-                    <button class="cta-primary" onclick="goToDowsell()">
-                        Try 7-Day for £39
-                    </button>
-                    <button class="btn-secondary" onclick="goToPricing()">
-                        View Monthly Plans
-                    </button>
-                </div>
-            `;
+            document.getElementById('resultDisplay').style.display = 'block';
+            document.getElementById('peakWindow').textContent = peakWindow + ' ⭐';
         }
 
-        function goToDowsell() {
-            window.open('https://buy.stripe.com/aFaaEZ6HX6F84AafDs3VC06');
+        function chooseTier(tier) {
+            if (tier === 'solo') {
+                window.open('https://buy.stripe.com/cNibJ30jz2oSaYy0Iy3VC03');
+            } else if (tier === 'team') {
+                window.open('https://buy.stripe.com/3cI28t4zP8Ng1nY0Iy3VC04');
+            }
             closeModal();
         }
 
-        function goToPricing() {
-            closeModal();
-            document.querySelector('.pricing-section').scrollIntoView({ behavior: 'smooth' });
-        }
-
-        // Close modal on outside click
         document.getElementById('assessmentModal').addEventListener('click', function(e) {
             if (e.target === this) closeModal();
         });
