@@ -1,0 +1,862 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Viral Clip Script Generator — FLUXS</title>
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box}
+        :root{
+            --bg-deep:#0a0f1e;--bg-dark:#0f172a;--bg-card:#1e293b;--bg-raised:#263147;
+            --border:#334155;--border-light:#3d4f6b;--text-primary:#e2e8f0;
+            --text-secondary:#cbd5e1;--text-muted:#64748b;--accent:#06b6d4;
+            --accent-dim:rgba(6,182,212,0.12);--accent-glow:rgba(6,182,212,0.25);
+            --green:#10b981;--yellow:#f59e0b;--red:#ef4444;
+        }
+        body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg-dark);color:var(--text-primary);min-height:100vh;line-height:1.6}
+
+        /* NAV */
+        nav{background:rgba(10,15,30,0.97);border-bottom:1px solid var(--border);padding:0 24px;height:60px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:200;backdrop-filter:blur(16px)}
+        .nav-logo{font-size:15px;font-weight:700;color:var(--accent);letter-spacing:2px;text-decoration:none}
+        .nav-badge{background:var(--accent-dim);border:1px solid var(--accent);color:var(--accent);font-size:10px;font-weight:700;padding:3px 10px;border-radius:12px;letter-spacing:.5px}
+
+        /* LAYOUT */
+        .app{display:grid;grid-template-columns:360px 1fr;min-height:calc(100vh - 60px)}
+        @media(max-width:900px){.app{grid-template-columns:1fr}}
+
+        /* FORM PANEL */
+        .form-panel{background:var(--bg-deep);border-right:1px solid var(--border);padding:24px;overflow-y:auto;position:sticky;top:60px;height:calc(100vh - 60px)}
+        @media(max-width:900px){.form-panel{position:relative;top:0;height:auto;border-right:none;border-bottom:1px solid var(--border)}}
+        .form-title{font-size:17px;font-weight:700;margin-bottom:4px}
+        .form-sub{font-size:12px;color:var(--text-muted);margin-bottom:24px;line-height:1.5}
+        .field{margin-bottom:18px}
+        label{display:block;font-size:11px;font-weight:700;color:var(--text-secondary);text-transform:uppercase;letter-spacing:.7px;margin-bottom:7px}
+        .hint{font-size:11px;color:var(--text-muted);margin-top:5px;font-weight:400;text-transform:none;letter-spacing:0}
+        textarea,input[type=text]{width:100%;background:var(--bg-card);border:1px solid var(--border);border-radius:8px;color:var(--text-primary);font-family:inherit;font-size:13px;padding:10px 13px;outline:none;transition:border-color .2s,box-shadow .2s;resize:vertical}
+        textarea{min-height:80px;line-height:1.5}
+        textarea:focus,input:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-glow)}
+        .platform-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+        .platform-btn{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:10px 8px;color:var(--text-secondary);font-size:12px;font-weight:600;cursor:pointer;transition:all .2s;text-align:center;display:flex;align-items:center;justify-content:center;gap:5px;font-family:inherit}
+        .platform-btn:hover{border-color:var(--accent);color:var(--accent)}
+        .platform-btn.active{background:var(--accent-dim);border-color:var(--accent);color:var(--accent)}
+        .pill-group{display:flex;flex-wrap:wrap;gap:6px}
+        .pill{background:var(--bg-card);border:1px solid var(--border);border-radius:20px;padding:5px 13px;font-size:11px;font-weight:600;color:var(--text-secondary);cursor:pointer;transition:all .2s;font-family:inherit}
+        .pill:hover{border-color:var(--accent);color:var(--accent)}
+        .pill.active{background:var(--accent-dim);border-color:var(--accent);color:var(--accent)}
+        .gen-btn{width:100%;padding:14px;background:var(--accent);color:#000;font-size:14px;font-weight:700;border:none;border-radius:10px;cursor:pointer;transition:all .25s;margin-top:10px;display:flex;align-items:center;justify-content:center;gap:8px;font-family:inherit;letter-spacing:.3px}
+        .gen-btn:hover:not(:disabled){background:#0ea5e9;transform:translateY(-1px);box-shadow:0 8px 24px var(--accent-glow)}
+        .gen-btn:disabled{opacity:.5;cursor:not-allowed;transform:none}
+        .spinner{width:16px;height:16px;border:2px solid rgba(0,0,0,.25);border-top-color:#000;border-radius:50%;animation:spin .7s linear infinite;display:none}
+        @keyframes spin{to{transform:rotate(360deg)}}
+        .demo-note{margin-top:14px;padding:10px 14px;background:var(--accent-dim);border:1px solid var(--accent);border-radius:8px;font-size:11px;color:var(--accent);line-height:1.5}
+
+        /* OUTPUT PANEL */
+        .out-panel{display:flex;flex-direction:column;min-height:calc(100vh - 60px)}
+        .toolbar{padding:14px 22px;border-bottom:1px solid var(--border);background:var(--bg-deep);display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;position:sticky;top:60px;z-index:100}
+        .tabs{display:flex;gap:4px;flex-wrap:wrap}
+        .stab{background:transparent;border:1px solid transparent;border-radius:6px;padding:5px 11px;font-size:11px;font-weight:600;color:var(--text-muted);cursor:pointer;transition:all .2s;white-space:nowrap;font-family:inherit}
+        .stab:hover{color:var(--text-secondary);border-color:var(--border)}
+        .stab.on{color:var(--accent);border-color:var(--accent);background:var(--accent-dim)}
+        .tbar-actions{display:flex;gap:8px}
+        .icon-btn{background:var(--bg-card);border:1px solid var(--border);border-radius:6px;padding:5px 12px;font-size:11px;font-weight:600;color:var(--text-secondary);cursor:pointer;transition:all .2s;font-family:inherit}
+        .icon-btn:hover{border-color:var(--accent);color:var(--accent)}
+        .out-body{flex:1;overflow-y:auto}
+
+        /* EMPTY */
+        .empty{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;min-height:420px;padding:40px;text-align:center}
+        .empty-icon{font-size:52px;margin-bottom:18px;opacity:.35}
+        .empty-title{font-size:18px;font-weight:600;color:var(--text-secondary);margin-bottom:8px}
+        .empty-desc{font-size:13px;color:var(--text-muted);max-width:320px;line-height:1.6}
+        .steps{margin-top:28px;display:flex;flex-direction:column;gap:10px;text-align:left}
+        .step{display:flex;align-items:flex-start;gap:11px;font-size:12px;color:var(--text-muted)}
+        .step-n{width:22px;height:22px;border-radius:50%;background:var(--accent-dim);border:1px solid var(--accent);color:var(--accent);font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+
+        /* LOADING */
+        .loading{display:none;padding:48px 28px;text-align:center}
+        .loading.on{display:block}
+        .lbar-wrap{background:var(--bg-card);border-radius:4px;height:4px;overflow:hidden;margin-bottom:14px}
+        .lbar{height:100%;background:linear-gradient(90deg,var(--accent),#818cf8,var(--accent));background-size:200% 100%;animation:shimmer 1.4s infinite;width:100%}
+        @keyframes shimmer{0%{background-position:100% 0}100%{background-position:-100% 0}}
+        .lphase{font-size:13px;color:var(--text-muted)}.lphase span{color:var(--accent);font-weight:600}
+
+        /* SECTIONS */
+        .sec{border-bottom:1px solid var(--border);scroll-margin-top:120px}
+        .sec-hdr{padding:18px 26px 14px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;user-select:none}
+        .sec-hdr:hover{background:rgba(255,255,255,.02)}
+        .sec-left{display:flex;align-items:center;gap:10px}
+        .sec-badge{background:var(--accent-dim);border:1px solid var(--accent);color:var(--accent);font-size:10px;font-weight:700;padding:2px 8px;border-radius:12px;letter-spacing:.5px}
+        .sec-title{font-size:14px;font-weight:700}
+        .chev{color:var(--text-muted);font-size:13px;transition:transform .2s}
+        .chev.open{transform:rotate(180deg)}
+        .sec-body{padding:0 26px 24px}
+        .sec-body.hide{display:none}
+
+        /* HOOKS */
+        .hooks-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:11px}
+        .hcard{background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:15px;transition:border-color .2s;position:relative}
+        .hcard:hover{border-color:var(--border-light)}
+        .hcard.top{border-color:var(--accent);background:var(--accent-dim)}
+        .hcard-meta{display:flex;align-items:center;justify-content:space-between;margin-bottom:9px}
+        .hcard-num{font-size:10px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px}
+        .score-badge{font-size:11px;font-weight:700;padding:2px 8px;border-radius:12px}
+        .score-badge.hi{background:rgba(16,185,129,.15);color:#10b981}
+        .score-badge.md{background:rgba(245,158,11,.15);color:#f59e0b}
+        .score-badge.lo{background:rgba(239,68,68,.15);color:#ef4444}
+        .htext{font-size:14px;font-weight:600;color:var(--text-primary);line-height:1.5;margin-bottom:9px}
+        .htype{display:inline-block;background:var(--bg-raised);border:1px solid var(--border);color:var(--text-muted);font-size:10px;font-weight:600;padding:2px 8px;border-radius:10px;text-transform:uppercase;letter-spacing:.4px;margin-bottom:7px}
+        .hwhy{font-size:11px;color:var(--text-muted);line-height:1.5;font-style:italic}
+        .top-badge{position:absolute;top:-8px;right:12px;background:var(--accent);color:#000;font-size:9px;font-weight:700;padding:2px 8px;border-radius:10px;letter-spacing:.5px}
+        .copy-h{background:transparent;border:1px solid var(--border);border-radius:5px;padding:4px 10px;font-size:10px;color:var(--text-muted);cursor:pointer;transition:all .2s;margin-top:8px;width:100%;font-family:inherit}
+        .copy-h:hover{border-color:var(--accent);color:var(--accent)}
+
+        /* SCRIPTS */
+        .stabs{display:flex;gap:4px;border-bottom:1px solid var(--border);margin-bottom:18px}
+        .sctab{background:transparent;border:none;border-bottom:2px solid transparent;padding:8px 14px;font-size:12px;font-weight:600;color:var(--text-muted);cursor:pointer;transition:all .2s;margin-bottom:-1px;font-family:inherit}
+        .sctab:hover{color:var(--text-secondary)}
+        .sctab.on{color:var(--accent);border-bottom-color:var(--accent)}
+        .spane{display:none}.spane.on{display:block}
+        .meta-row{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:18px}
+        .chip{background:var(--bg-raised);border:1px solid var(--border);border-radius:6px;padding:4px 10px;font-size:11px;color:var(--text-secondary)}
+        .chip b{color:var(--accent)}
+        .sblock{background:var(--bg-card);border:1px solid var(--border);border-radius:10px;overflow:hidden;margin-bottom:12px}
+        .sblock-hdr{background:var(--bg-raised);padding:9px 15px;font-size:11px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:.6px;display:flex;align-items:center;justify-content:space-between}
+        .sblock-body{padding:15px;font-size:13px;color:var(--text-secondary);line-height:1.8;white-space:pre-wrap}
+        .sblock.cta{border-color:var(--accent)}
+        .sblock.cta .sblock-hdr{background:var(--accent-dim);color:var(--accent)}
+        .copy-s{background:transparent;border:1px solid var(--border);border-radius:4px;padding:3px 8px;font-size:10px;color:var(--text-muted);cursor:pointer;transition:all .2s;font-weight:600;text-transform:none;letter-spacing:0;font-family:inherit}
+        .copy-s:hover{border-color:var(--accent);color:var(--accent)}
+        .tone-note{font-size:12px;color:var(--text-muted);font-style:italic;margin-bottom:15px;padding:9px 13px;background:var(--bg-card);border-radius:6px;border-left:3px solid var(--accent)}
+        .vscore-row{display:flex;align-items:center;gap:10px;margin-bottom:15px;padding:10px 14px;background:var(--bg-card);border-radius:8px;border:1px solid var(--border)}
+        .vscore-label{font-size:11px;color:var(--text-muted);font-weight:600}
+        .vscore-val{font-size:20px;font-weight:700;color:var(--accent);margin-left:auto}
+        .vscore-desc{font-size:11px;color:var(--text-muted);font-style:italic}
+
+        /* VISUAL PLAN */
+        .timeline{position:relative;padding-left:22px}
+        .timeline::before{content:'';position:absolute;left:8px;top:0;bottom:0;width:2px;background:var(--border)}
+        .scene-item{position:relative;margin-bottom:18px}
+        .scene-dot{position:absolute;left:-18px;top:12px;width:10px;height:10px;border-radius:50%;background:var(--accent);border:2px solid var(--bg-dark)}
+        .scene-card{background:var(--bg-card);border:1px solid var(--border);border-radius:10px;overflow:hidden}
+        .scene-hdr{background:var(--bg-raised);padding:9px 15px;display:flex;align-items:center;justify-content:space-between}
+        .scene-n{font-size:11px;font-weight:700;color:var(--accent);text-transform:uppercase;letter-spacing:.6px}
+        .scene-ts{font-size:11px;color:var(--text-muted);font-weight:600}
+        .scene-body{padding:13px 15px;display:grid;grid-template-columns:1fr 1fr;gap:10px}
+        @media(max-width:600px){.scene-body{grid-template-columns:1fr}}
+        .sf label{font-size:10px;margin-bottom:3px;color:var(--text-muted)}
+        .sf p{font-size:12px;color:var(--text-secondary);line-height:1.5}
+
+        /* CAPTIONS */
+        .cap-card{background:var(--bg-card);border:1px solid var(--border);border-radius:10px;margin-bottom:12px;overflow:hidden}
+        .cap-hdr{background:var(--bg-raised);padding:9px 15px;display:flex;align-items:center;justify-content:space-between;font-size:11px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:.6px}
+        .cap-body{padding:15px;font-size:13px;color:var(--text-secondary);line-height:1.8;white-space:pre-wrap}
+        .hash-tiers{display:flex;flex-direction:column;gap:12px}
+        .htier{background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:13px 15px}
+        .tier-lbl{font-size:10px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:.6px;margin-bottom:9px}
+        .hash-chips{display:flex;flex-wrap:wrap;gap:6px}
+        .hchip{background:var(--bg-raised);border:1px solid var(--border);border-radius:6px;padding:4px 10px;font-size:12px;color:var(--accent);font-weight:600;cursor:pointer;transition:all .2s}
+        .hchip:hover{background:var(--accent-dim);border-color:var(--accent)}
+
+        /* REMIXES */
+        .remix-block{margin-bottom:20px}
+        .remix-title{font-size:13px;font-weight:700;color:var(--text-primary);margin-bottom:11px;display:flex;align-items:center;gap:8px}
+        .remix-pill{background:var(--bg-raised);border:1px solid var(--border);color:var(--text-muted);font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px}
+
+        /* SERIES */
+        .series-banner{background:linear-gradient(135deg,var(--accent-dim),rgba(129,140,248,.1));border:1px solid var(--accent);border-radius:10px;padding:16px 20px;margin-bottom:18px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px}
+        .series-name{font-size:20px;font-weight:700;color:var(--accent)}
+        .series-sub{font-size:12px;color:var(--text-secondary);max-width:280px;line-height:1.5}
+
+        /* FOOTER */
+        footer{background:var(--bg-deep);border-top:1px solid var(--border);padding:14px 26px;text-align:center;font-size:11px;color:var(--text-muted)}
+        footer a{color:var(--accent);text-decoration:none}
+
+        /* TOAST */
+        .toast{position:fixed;bottom:22px;right:22px;background:var(--bg-raised);border:1px solid var(--accent);color:var(--accent);padding:9px 16px;border-radius:8px;font-size:12px;font-weight:600;z-index:9999;transform:translateY(16px);opacity:0;transition:all .28s;pointer-events:none}
+        .toast.on{transform:translateY(0);opacity:1}
+
+        ::-webkit-scrollbar{width:5px;height:5px}
+        ::-webkit-scrollbar-track{background:transparent}
+        ::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
+    </style>
+</head>
+<body>
+
+<nav>
+    <a href="index.html" class="nav-logo">FLUXS</a>
+    <div class="nav-badge">SCRIPT GENERATOR</div>
+    <div style="font-size:11px;color:var(--text-muted);">Demo Mode</div>
+</nav>
+
+<div class="app">
+
+    <!-- FORM -->
+    <aside class="form-panel">
+        <div class="form-title">Viral Clip Generator</div>
+        <div class="form-sub">Turn any idea into scroll-stopping short-form scripts — hooks, visuals, captions &amp; CTAs.</div>
+
+        <div class="field">
+            <label>Topic / Idea</label>
+            <textarea id="topic">How busy founders can cut their 60-hour work week down to 40 hours without losing output — using peak performance scheduling.</textarea>
+            <div class="hint">Be specific. Name the audience, pain point, and outcome.</div>
+        </div>
+
+        <div class="field">
+            <label>Platform</label>
+            <div class="platform-grid" id="platGrid">
+                <button class="platform-btn active" data-val="TikTok">📱 TikTok</button>
+                <button class="platform-btn" data-val="Instagram Reels">📸 Reels</button>
+                <button class="platform-btn" data-val="YouTube Shorts">▶️ Shorts</button>
+                <button class="platform-btn" data-val="LinkedIn">💼 LinkedIn</button>
+            </div>
+        </div>
+
+        <div class="field">
+            <label>Primary Goal</label>
+            <div class="pill-group" id="goalGroup">
+                <button class="pill active" data-val="Audience Growth">Audience Growth</button>
+                <button class="pill" data-val="Leads &amp; DMs">Leads &amp; DMs</button>
+                <button class="pill" data-val="Direct Sales">Direct Sales</button>
+                <button class="pill" data-val="Authority">Authority</button>
+            </div>
+        </div>
+
+        <div class="field">
+            <label>Tone</label>
+            <div class="pill-group" id="toneGroup">
+                <button class="pill active" data-val="Educational">Educational</button>
+                <button class="pill" data-val="Contrarian">Contrarian</button>
+                <button class="pill" data-val="Story-Driven">Story-Driven</button>
+                <button class="pill" data-val="Inspirational">Inspirational</button>
+            </div>
+        </div>
+
+        <div class="field">
+            <label>Target Audience</label>
+            <input type="text" value="Busy founders &amp; entrepreneurs, 28–45, working 50+ hour weeks">
+        </div>
+
+        <button class="gen-btn" id="genBtn" onclick="runDemo()">
+            <div class="spinner" id="spin"></div>
+            <span id="btnTxt">✦ Generate Scripts</span>
+        </button>
+
+        <div class="demo-note">
+            ✦ Demo mode — click Generate to see a fully rendered example output. Connect your Claude API key in the full version to generate scripts for any topic.
+        </div>
+    </aside>
+
+    <!-- OUTPUT -->
+    <main class="out-panel">
+        <div class="toolbar">
+            <div class="tabs" id="tabsEl">
+                <button class="stab on" onclick="showSec('all',this)">All</button>
+            </div>
+            <div class="tbar-actions">
+                <button class="icon-btn" onclick="copyAll()">Copy All</button>
+                <button class="icon-btn" onclick="resetOut()">Clear</button>
+            </div>
+        </div>
+
+        <div class="out-body" id="outBody">
+            <div class="empty" id="emptyEl">
+                <div class="empty-icon">🎬</div>
+                <div class="empty-title">Ready to generate</div>
+                <div class="empty-desc">Fill in your topic, select platform and goal, then hit Generate Scripts.</div>
+                <div class="steps">
+                    <div class="step"><div class="step-n">1</div><span>Describe your topic — the more specific, the better the output</span></div>
+                    <div class="step"><div class="step-n">2</div><span>Choose platform, goal, and tone</span></div>
+                    <div class="step"><div class="step-n">3</div><span>Get 10 hooks, 3 full scripts, visual plan, captions &amp; hashtags</span></div>
+                    <div class="step"><div class="step-n">4</div><span>Copy any section directly to your notes or scheduler</span></div>
+                </div>
+            </div>
+            <div class="loading" id="loadEl">
+                <div class="lbar-wrap"><div class="lbar"></div></div>
+                <div class="lphase">Generating · <span id="phaseEl">Building hook bank...</span></div>
+            </div>
+            <div id="rendered" style="display:none"></div>
+        </div>
+
+        <footer>Powered by <a href="#">Claude AI</a> · Viral Clip Script Generator · Every script is ready to film and post.</footer>
+    </main>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ─── DEMO DATA ────────────────────────────────────────────────────────────────
+const D = {
+ hooks:[
+  {n:1,type:'contrarian',score:89,text:"You're not working too little. You're working at the wrong time.",why:"Reframes the problem instantly — converts frustration into curiosity.",top:true},
+  {n:2,type:'proof-anchor',score:91,text:"I cut my work week from 60 hours to 40. Revenue went up 180%.",why:"Specific numbers trigger credibility — the viewer must know how.",top:true},
+  {n:3,type:'anomaly',score:88,text:"The CEO working 35 hours outperforms the one working 70. Here's why.",why:"Direct comparison breaks the hustle-culture assumption and demands an explanation.",top:true},
+  {n:4,type:'curiosity-gap',score:85,text:"The mistake 90% of founders make that makes burnout inevitable.",why:"Unnamed specific mistake creates an information gap the viewer must close.",top:false},
+  {n:5,type:'pain-point',score:83,text:"You're burned out. Not because you're weak — because of your timing.",why:"Removes shame and redirects blame to a fixable system problem.",top:false},
+  {n:6,type:'fear-trigger',score:81,text:"Every hour you grind in a low-energy window costs you two peak hours.",why:"Names a specific hidden cost the viewer hadn't quantified before.",top:false},
+  {n:7,type:'pattern-interrupt',score:79,text:"Stop. Before you add another hour to your week, watch this.",why:"Direct command breaks the scroll reflex — makes the viewer pause.",top:false},
+  {n:8,type:'story-open',score:84,text:"I almost quit in month 8. Then I found out I was working in my valleys.",why:"Mid-story drop creates instant empathy and an unresolved narrative tension.",top:false},
+  {n:9,type:'bold-claim',score:86,text:"Hustle culture didn't lie about effort. It lied about timing.",why:"Partially validates hustle culture (prevents rejection) then pivots to a new frame.",top:false},
+  {n:10,type:'direct-address',score:76,text:"If you're a founder logging 50+ hour weeks and still behind — this is for you.",why:"Precise audience self-identification filters in the right viewer and signals relevance.",top:false},
+ ],
+
+ scripts:[
+  {
+   n:1,structure:'Hook → Problem → Solution → CTA',hookUsed:'Hook 1',
+   platform:'TikTok',runtime:'30s',pacing:'Fast-cut (cut every 1.5–2s)',
+   toneNote:'Deliver like a calm authority — you already know the answer. No urgency. No hype.',
+   viralScore:88,strength:'Hook reframes the problem in 10 words — stops the scroll immediately.',risk:'Solution section needs tight pacing or viewers drop at the 20s mark.',
+   voiceover:`You're not working too little. [pause]
+You're working at the wrong time.
+
+Your brain peaks for maybe four hours a day.
+High focus. Fast decisions. Real output.
+
+Right now, you're spending those four hours on email,
+stand-ups, and Slack notifications.
+
+Then doing your hardest thinking at 3pm — your worst valley.
+
+Here's the fix: map your peaks. Protect them.
+Only do deep work inside those windows.
+Everything else fills the valleys.
+
+I did this. Cut 20 hours from my week. Doubled my output.
+
+Comment 'PEAKS' and I'll send you the 7-day mapping system.`,
+   onscreen:`YOU'RE WORKING AT THE WRONG TIME.
+YOUR BRAIN PEAKS 4 HOURS/DAY.
+YOU'RE SPENDING THEM ON EMAIL.
+MAP → PROTECT → ATTACK.
+COMMENT 'PEAKS' FOR THE SYSTEM.`,
+   ctaType:'Comment bait (high-completion)',
+   cta:`Comment 'PEAKS' and I'll DM you the full 7-day peak mapping system.`
+  },
+  {
+   n:2,structure:'Hook → Story → Lesson → CTA',hookUsed:'Hook 8',
+   platform:'TikTok',runtime:'45s',pacing:'Moderate — let the story breathe',
+   toneNote:'Vulnerable in the first half, then shift to confident authority at the lesson turn.',
+   viralScore:85,strength:'Story arc creates emotional investment — viewers stay for the resolution.',risk:'45s is long for TikTok — the story turn at 25s must land hard or completions drop.',
+   voiceover:`I almost quit in month 8. [pause]
+
+I was doing 70-hour weeks and missing every target.
+Convinced I just wasn't built for this.
+
+Then a coach asked me one question:
+"When do you actually think clearly?"
+
+Not when do you work — when do you think clearly.
+
+I had no idea.
+
+So I tracked it. Seven days. Energy score every two hours.
+
+Turned out: I peak from 9am to 11am and 4pm to 6pm.
+
+I was using both those windows for team stand-ups and inbox zero.
+My hardest creative work? Scheduled at 3pm.
+
+My worst energy of the entire day.
+
+I flipped everything.
+
+Eight weeks later: same revenue. Twenty-five fewer hours per week.
+
+Track your energy for seven days.
+The data will shock you.
+
+Follow — Part 2 drops tomorrow. I'll show you how to protect your peaks once you've found them.`,
+   onscreen:`I ALMOST QUIT AT MONTH 8.
+70-HOUR WEEKS. MISSING EVERY TARGET.
+"WHEN DO YOU THINK CLEARLY?"
+7 DAYS OF TRACKING. EVERYTHING CHANGED.
+FOLLOW FOR PART 2.`,
+   ctaType:'Series hook (follow + retention)',
+   cta:`Follow for Part 2 — how to protect your peaks from every meeting and notification that tries to steal them.`
+  },
+  {
+   n:3,structure:'Hook → Contrarian Claim → Proof → CTA',hookUsed:'Hook 3',
+   platform:'TikTok',runtime:'30s',pacing:'Fast-cut with deliberate pause at the proof reveal',
+   toneNote:'Confident and matter-of-fact. Deliver the stats like they speak for themselves — because they do.',
+   viralScore:91,strength:'Opens with a direct comparison that invites debate — drives comments organically.',risk:'Proof stats must be specific and credible or the contrarian claim loses its landing.',
+   voiceover:`The CEO working 35 hours outperforms the one working 70. [pause]
+
+Here's why — and it'll change how you think about work.
+
+They're not smarter. They don't have a better team.
+
+They know exactly when their brain is at peak performance.
+
+And they only schedule their highest-leverage work inside those windows.
+
+Everything else — meetings, email, admin — goes in the valleys.
+
+We ran this experiment with 3,892 founders.
+
+Average output increase: 180%. Average hours saved per week: 22.
+
+You don't need more hours. You need the right ones.
+
+Link in bio — map your peaks in 7 days.`,
+   onscreen:`35 HOURS > 70 HOURS.
+NOT SMARTER. BETTER TIMING.
+3,892 FOUNDERS TESTED THIS.
+AVG OUTPUT UP 180%.
+LINK IN BIO — START TODAY.`,
+   ctaType:'Direct CTA (conversion-ready)',
+   cta:`Link in bio — map your peak performance windows in 7 days and reclaim 20+ hours per week.`
+  },
+ ],
+
+ scenes:[
+  {n:1,ts:'0:00–0:03',visual:'Presenter on camera, direct eye contact, slight forward lean into lens',shot:'Selfie cam — medium close-up',camera:'Static',overlay:'"YOU\'RE WORKING AT THE WRONG TIME." (bold, top third)',broll:'N/A — hook must be face-to-camera',energy:'Calm authority. Speaks like the answer is already obvious to them.'},
+  {n:2,ts:'0:03–0:08',visual:'Presenter continues — slight shift in framing or angle cut',shot:'Selfie cam or handheld — medium shot',camera:'Slight movement or jump cut',overlay:'"YOUR BRAIN PEAKS 4 HOURS/DAY" (bold, center)',broll:'N/A',energy:'Urgency builds — they\'re wasting something valuable right now.'},
+  {n:3,ts:'0:08–0:13',visual:'B-roll: cluttered inbox, Slack notifications, calendar packed with meetings',shot:'Screen record or stock footage',camera:'Cut sequence — 3 fast shots',overlay:'"YOU\'RE SPENDING THEM ON THIS." (italic, bottom)',broll:'Stock: busy email inbox, Slack channels, back-to-back calendar blocks',energy:'N/A for presenter — visuals carry the emotional weight.'},
+  {n:4,ts:'0:13–0:20',visual:'Back to presenter — solution pivot, lean forward slightly at "here\'s the fix"',shot:'Selfie cam — medium close-up',camera:'Static, then slight push-in on key line',overlay:'"MAP → PROTECT → ATTACK" (bold, center)',broll:'N/A',energy:'Excited but controlled. This is the payoff — deliver it like a gift.'},
+  {n:5,ts:'0:20–0:24',visual:'Over-shoulder view of phone or laptop showing calendar with blocked peak windows',shot:'Screen record or handheld over-shoulder',camera:'Static',overlay:'"DEEP WORK ONLY IN PEAKS." (smaller, lower third)',broll:'Phone screen showing time-blocked calendar with peak windows highlighted in cyan',energy:'N/A for presenter — show, don\'t tell.'},
+  {n:6,ts:'0:24–0:28',visual:'Face-to-camera — results delivery with direct eye contact',shot:'Selfie cam — medium close-up',camera:'Static',overlay:'"CUT 20 HRS. DOUBLED OUTPUT." (bold, top)',broll:'N/A',energy:'Confident, not boastful. Matter-of-fact tone — the numbers speak.'},
+  {n:7,ts:'0:28–0:30',visual:'CTA close — hold eye contact, very slight lean forward',shot:'Selfie cam — close-up',camera:'Static',overlay:'"COMMENT \'PEAKS\'" (bold, bottom third)',broll:'N/A',energy:'Warm but direct. The ask should feel like giving them something, not taking something.'},
+ ],
+
+ captions:{
+  short:`You're not working too little. You're working at the wrong time.
+
+Your brain peaks for 4 hours a day. Most founders spend those hours on email.
+
+Comment 'PEAKS' and I'll send you the exact 7-day mapping system.`,
+  long:`You're not burned out because you lack discipline. You're burned out because you're grinding in your valleys.
+
+Your brain has roughly 4 peak hours per day — windows of maximum focus, fast decision-making, and real creative output. After that, the quality drops fast.
+
+Most founders spend those windows on stand-ups, email triage, and Slack. Then try to write, build, or strategise at 3pm when the tank is empty.
+
+I mapped my peaks two years ago. Cut 20 hours from my work week. Output doubled.
+
+It's not about working more. It's about working at the right time.
+
+Try this: track your energy level (1–10) every two hours for seven days. The pattern will shock you.
+
+What time of day do you feel sharpest? Comment below — I'll tell you if you're protecting it or wasting it.`,
+  t1:['#peakperformance','#founderpeak','#energymanagement','#deepworkprotocol'],
+  t2:['#productivityhacks','#worksmarter','#entrepreneurmindset','#deepwork','#burnoutrecovery','#founderlife'],
+  t3:['#entrepreneur','#productivity','#businesstips'],
+ },
+
+ remixes:[
+  {
+   label:'Remix A — LinkedIn Version',
+   sub:'Platform Swap',
+   changes:`• Tone shifted from fast/punchy to deliberate, authority-driven
+• Research framing added ("3,892 founders") to meet LinkedIn professional credibility standard
+• CTA changed from comment-bait to comment-discussion ("comment your take")
+• Pacing slowed — LinkedIn viewers expect to think, not just scroll
+• Sentence structure extended — fuller thoughts, not fragments
+• Hook rewritten for professional self-identification (not consumer)`,
+   script:`The executive working 35 hours per week consistently outperforms the one working 70.
+
+I've observed this pattern across 3,892 founders and senior operators who completed our peak performance protocol.
+
+The difference is never talent. It's timing.
+
+High performers know exactly when their cognitive peaks occur — those 2 to 3 hour windows where focus is sharp, decisions come fast, and the work quality is categorically different.
+
+They protect those windows absolutely. No meetings. No notifications. No reactive tasks.
+
+Everything that doesn't require peak-state thinking gets delegated, automated, or scheduled in low-energy windows.
+
+The result across our cohort: 180% average output increase. 22 hours reclaimed per week. Burnout scores dropped 52%.
+
+If you're working 60-plus hours and still feeling behind, the problem is almost certainly not your effort.
+
+It's your timing.
+
+What time of day do you make your best decisions? Comment below — I want to see if you're protecting it.`
+  },
+  {
+   label:'Remix B — Before/After Angle',
+   sub:'Angle Swap',
+   changes:`• Structure changed from Hook → Problem → Solution to Hook → Before/After → Bridge → CTA
+• "Before" opens the script instead of the hook — forces immediate identification
+• Transformation becomes the narrative arc (not the education)
+• More personal and specific — less instructional
+• CTA kept as comment-bait but reframed around the transformation identity`,
+   script:`Before: 60-hour weeks. Always behind. Constant exhaustion.
+
+After: 40-hour weeks. Hitting every target. Best sleep in two years.
+
+Same business. Same team. Same me.
+
+The only thing that changed: I stopped treating every hour of the day as equal.
+
+Because they're not.
+
+Your brain peaks and valleys on a 90-minute biological cycle. Most people are grinding at their hardest during valleys and wasting their peaks on email.
+
+Once I mapped my actual peak windows and started protecting them — the shift was immediate.
+
+Three weeks. That's all it took to feel the difference.
+
+Comment 'BEFORE' if you're in the before state right now.
+I'll send you the exact 7-day tracking template I used.`
+  },
+ ],
+
+ series:{
+  name:'The Peak Performance Creator Series',
+  rationale:'Each episode solves a distinct problem in the peak performance journey — from discovery to implementation to protection — creating a natural funnel from viral reach to paid conversion.',
+  episodes:[
+   {n:1,title:'"Your biggest productivity lie — it\'s not laziness, it\'s timing."',type:'Contrarian hook — broad viral appeal. Leads the series.'},
+   {n:2,title:'"How to map your actual peak windows in exactly 7 days."',type:'Curiosity-gap hook — step-by-step tutorial, highest save rate.'},
+   {n:3,title:'"The 3 things that destroy your peaks before 9am."',type:'Fear-trigger hook — high-engagement, comment driver.'},
+   {n:4,title:'"How to peak-proof your calendar against meetings and Slack."',type:'Pain-point hook — practical, high save and share rate.'},
+   {n:5,title:'"Why I only check email in my valleys — and you should too."',type:'Contrarian hook — habit-shift, re-watchable.'},
+   {n:6,title:'"The founder who cut 30 hours and tripled revenue." (Case study)',type:'Proof-anchor hook — highest conversion potential. Closes the series.'},
+  ],
+  order:'Episode 1 leads (highest viral potential — contrarian, broad audience). Episode 6 closes (specific proof story, strongest conversion — ends with direct paid CTA).',
+  linking:'Each episode ends: "Part [N+1] drops [day] — follow so you don\'t miss it." Episodes 1–5 collect comment keywords for DM automation. Episode 6 delivers the direct purchase CTA to a warm, pre-sold audience.',
+ }
+};
+
+// ─── INTERACTION STATE ────────────────────────────────────────────────────────
+let rendered = false;
+let generating = false;
+
+document.querySelectorAll('#platGrid .platform-btn').forEach(b=>b.addEventListener('click',()=>{
+ document.querySelectorAll('#platGrid .platform-btn').forEach(x=>x.classList.remove('active'));
+ b.classList.add('active');
+}));
+['goalGroup','toneGroup'].forEach(id=>{
+ document.querySelectorAll(`#${id} .pill`).forEach(p=>p.addEventListener('click',()=>{
+  document.querySelectorAll(`#${id} .pill`).forEach(x=>x.classList.remove('active'));
+  p.classList.add('active');
+ }));
+});
+
+// ─── DEMO RUN ─────────────────────────────────────────────────────────────────
+async function runDemo(){
+ if(generating) return;
+ generating=true;
+ resetOut();
+ document.getElementById('emptyEl').style.display='none';
+ document.getElementById('genBtn').disabled=true;
+ document.getElementById('spin').style.display='block';
+ document.getElementById('btnTxt').textContent='Generating...';
+
+ const load=document.getElementById('loadEl');
+ const phase=document.getElementById('phaseEl');
+ load.classList.add('on');
+
+ const phases=['Building hook bank...','Writing full scripts...','Planning visual shots...','Writing captions & hashtags...','Creating remix versions...','Evaluating series potential...'];
+ let pi=0;
+ const iv=setInterval(()=>{if(pi<phases.length-1){pi++;phase.textContent=phases[pi];}},600);
+
+ await delay(3800);
+ clearInterval(iv);
+ load.classList.remove('on');
+
+ buildOutput();
+
+ document.getElementById('genBtn').disabled=false;
+ document.getElementById('spin').style.display='none';
+ document.getElementById('btnTxt').textContent='✦ Regenerate';
+ generating=false;
+ rendered=true;
+}
+
+function delay(ms){return new Promise(r=>setTimeout(r,ms))}
+
+// ─── BUILD OUTPUT ─────────────────────────────────────────────────────────────
+function buildOutput(){
+ const el=document.getElementById('rendered');
+ el.innerHTML='';
+
+ const tabs=document.getElementById('tabsEl');
+ tabs.innerHTML='<button class="stab on" onclick="showSec(\'all\',this)">All</button>';
+
+ const defs=[
+  {key:'hooks',   label:'Hooks',       icon:'🪝', fn:renderHooks},
+  {key:'scripts', label:'Scripts',     icon:'📝', fn:renderScripts},
+  {key:'visual',  label:'Visual Plan', icon:'🎬', fn:renderVisual},
+  {key:'caps',    label:'Captions',    icon:'📋', fn:renderCaptions},
+  {key:'remixes', label:'Remixes',     icon:'🔄', fn:renderRemixes},
+  {key:'series',  label:'Series',      icon:'📺', fn:renderSeries},
+ ];
+
+ const titles={
+  hooks:'10 Hooks with Virality Scores',
+  scripts:'3 Full Scripts — Ready to Film',
+  visual:'Scene-by-Scene Director\'s Plan',
+  caps:'Captions & Hashtag Strategy',
+  remixes:'Platform & Angle Remixes',
+  series:'Content Series Potential',
+ };
+
+ defs.forEach(({key,label,icon,fn})=>{
+  // Tab
+  const tab=document.createElement('button');
+  tab.className='stab';
+  tab.dataset.sec=key;
+  tab.textContent=`${icon} ${label}`;
+  tab.onclick=()=>showSec(key,tab);
+  tabs.appendChild(tab);
+
+  // Section
+  const sec=document.createElement('div');
+  sec.className='sec';
+  sec.dataset.key=key;
+
+  const hdr=document.createElement('div');
+  hdr.className='sec-hdr';
+  hdr.innerHTML=`<div class="sec-left"><span class="sec-badge">${label.toUpperCase()}</span><span class="sec-title">${titles[key]}</span></div><span class="chev open">▼</span>`;
+  hdr.addEventListener('click',()=>{
+   const body=hdr.nextElementSibling;
+   const ch=hdr.querySelector('.chev');
+   body.classList.toggle('hide');
+   ch.classList.toggle('open');
+  });
+
+  const body=document.createElement('div');
+  body.className='sec-body';
+  fn(body);
+
+  sec.appendChild(hdr);
+  sec.appendChild(body);
+  el.appendChild(sec);
+ });
+
+ el.style.display='block';
+}
+
+// ─── HOOKS ────────────────────────────────────────────────────────────────────
+function renderHooks(c){
+ const g=mk('div','hooks-grid');
+ D.hooks.forEach(h=>{
+  const sc=parseInt(h.score);
+  const sclass=sc>=85?'hi':sc>=70?'md':'lo';
+  const card=mk('div',`hcard${h.top?' top':''}`);
+  if(h.top){const b=mk('div','top-badge');b.textContent='★ TOP PICK';card.appendChild(b);}
+  card.innerHTML+= `
+   <div class="hcard-meta">
+    <span class="hcard-num">Hook ${h.n}</span>
+    <span class="score-badge ${sclass}">${h.score}/100</span>
+   </div>
+   <div class="htext">${esc(h.text)}</div>
+   <div class="htype">${esc(h.type)}</div>
+   <div class="hwhy">${esc(h.why)}</div>
+   <button class="copy-h" onclick="cp(${JSON.stringify(h.text)})">Copy Hook</button>
+  `;
+  g.appendChild(card);
+ });
+ c.appendChild(g);
+}
+
+// ─── SCRIPTS ─────────────────────────────────────────────────────────────────
+function renderScripts(c){
+ const tabBar=mk('div','stabs');
+ D.scripts.forEach((s,i)=>{
+  const t=mk('button',`sctab${i===0?' on':''}`);
+  t.textContent=`Script ${s.n}`;
+  t.onclick=()=>{
+   document.querySelectorAll('.sctab').forEach(x=>x.classList.remove('on'));
+   document.querySelectorAll('.spane').forEach(x=>x.classList.remove('on'));
+   t.classList.add('on');
+   document.getElementById(`sp${i}`).classList.add('on');
+  };
+  tabBar.appendChild(t);
+ });
+ c.appendChild(tabBar);
+
+ D.scripts.forEach((s,i)=>{
+  const pane=mk('div',`spane${i===0?' on':''}`);
+  pane.id=`sp${i}`;
+
+  // Virality score row
+  const vr=mk('div','vscore-row');
+  vr.innerHTML=`<span class="vscore-label">Virality Score</span><span class="vscore-desc">${esc(s.strength)}</span><span class="vscore-val">${s.viralScore}/100</span>`;
+  pane.appendChild(vr);
+
+  // Meta chips
+  const mr=mk('div','meta-row');
+  [{k:'Structure',v:s.structure},{k:'Platform',v:s.platform},{k:'Runtime',v:s.runtime},{k:'Pacing',v:s.pacing}]
+   .forEach(({k,v})=>{const ch=mk('div','chip');ch.innerHTML=`${k}: <b>${esc(v)}</b>`;mr.appendChild(ch);});
+  pane.appendChild(mr);
+
+  // Tone note
+  const tn=mk('div','tone-note');tn.textContent=s.toneNote;pane.appendChild(tn);
+
+  // Blocks
+  [['Voiceover',s.voiceover,false],['On-Screen Text',s.onscreen,false],['CTA',`Type: ${s.ctaType}\n\n${s.cta}`,true]]
+   .forEach(([lbl,content,isCta])=>{
+    const bl=mk('div',`sblock${isCta?' cta':''}`);
+    bl.innerHTML=`
+     <div class="sblock-hdr">${lbl}<button class="copy-s" onclick="cp(${JSON.stringify(content)})">Copy</button></div>
+     <div class="sblock-body">${esc(content)}</div>
+    `;
+    pane.appendChild(bl);
+   });
+
+  c.appendChild(pane);
+ });
+}
+
+// ─── VISUAL PLAN ─────────────────────────────────────────────────────────────
+function renderVisual(c){
+ const tl=mk('div','timeline');
+ D.scenes.forEach(sc=>{
+  const item=mk('div','scene-item');
+  const dot=mk('div','scene-dot');
+  const card=mk('div','scene-card');
+  card.innerHTML=`
+   <div class="scene-hdr">
+    <span class="scene-n">Scene ${sc.n}</span>
+    <span class="scene-ts">${esc(sc.ts)}</span>
+   </div>
+   <div class="scene-body">
+    <div class="sf"><label>Visual</label><p>${esc(sc.visual)}</p></div>
+    <div class="sf"><label>Shot Type</label><p>${esc(sc.shot)}</p></div>
+    <div class="sf"><label>Camera</label><p>${esc(sc.camera)}</p></div>
+    <div class="sf"><label>On-Screen Text</label><p>${esc(sc.overlay)}</p></div>
+    ${sc.broll&&sc.broll!=='N/A'?`<div class="sf"><label>B-Roll</label><p>${esc(sc.broll)}</p></div>`:''}
+    <div class="sf"><label>Energy Cue</label><p>${esc(sc.energy)}</p></div>
+   </div>
+  `;
+  item.appendChild(dot);item.appendChild(card);
+  tl.appendChild(item);
+ });
+ c.appendChild(tl);
+}
+
+// ─── CAPTIONS ────────────────────────────────────────────────────────────────
+function renderCaptions(c){
+ [['Short Caption','TikTok & Reels',D.captions.short],['Long Caption','LinkedIn & Reels',D.captions.long]]
+  .forEach(([title,sub,text])=>{
+   const card=mk('div','cap-card');
+   card.innerHTML=`
+    <div class="cap-hdr"><span>${title} <span style="color:var(--text-muted);font-weight:400;font-size:10px">${sub}</span></span>
+     <button class="copy-s" onclick="cp(${JSON.stringify(text)})">Copy</button>
+    </div>
+    <div class="cap-body">${esc(text)}</div>
+   `;
+   c.appendChild(card);
+  });
+
+ const ht=mk('div','hash-tiers');
+ [['Tier 1 — Niche (highest quality engagement)',D.captions.t1],
+  ['Tier 2 — Mid-size (community reach)',D.captions.t2],
+  ['Tier 3 — Broad (discovery layer)',D.captions.t3]]
+ .forEach(([lbl,tags])=>{
+  const tier=mk('div','htier');
+  const chips=mk('div','hash-chips');
+  tags.forEach(t=>{
+   const ch=mk('div','hchip');
+   ch.textContent=t;ch.title='Click to copy';
+   ch.onclick=()=>cp(t);
+   chips.appendChild(ch);
+  });
+  tier.innerHTML=`<div class="tier-lbl">${lbl}</div>`;
+  tier.appendChild(chips);
+  ht.appendChild(tier);
+ });
+ c.appendChild(ht);
+}
+
+// ─── REMIXES ─────────────────────────────────────────────────────────────────
+function renderRemixes(c){
+ D.remixes.forEach(r=>{
+  const bl=mk('div','remix-block');
+  bl.innerHTML=`<div class="remix-title">${esc(r.label)}<span class="remix-pill">${esc(r.sub)}</span></div>`;
+  [['Changes Made',r.changes,false],['Rewritten Script',r.script,true]]
+   .forEach(([lbl,txt,isSc])=>{
+    const b=mk('div','sblock');
+    b.innerHTML=`
+     <div class="sblock-hdr">${lbl}${isSc?`<button class="copy-s" onclick="cp(${JSON.stringify(txt)})">Copy</button>`:''}
+     </div>
+     <div class="sblock-body">${esc(txt)}</div>
+    `;
+    bl.appendChild(b);
+   });
+  c.appendChild(bl);
+ });
+}
+
+// ─── SERIES ───────────────────────────────────────────────────────────────────
+function renderSeries(c){
+ const banner=mk('div','series-banner');
+ banner.innerHTML=`
+  <div>
+   <div style="font-size:11px;font-weight:700;color:var(--text-muted);letter-spacing:.5px;text-transform:uppercase;margin-bottom:4px">Series Name</div>
+   <div class="series-name">${esc(D.series.name)}</div>
+  </div>
+  <div class="series-sub">${esc(D.series.rationale)}</div>
+ `;
+ c.appendChild(banner);
+
+ // Episodes
+ const epBlock=mk('div','sblock');
+ const epHdr=mk('div','sblock-hdr');epHdr.textContent='Episode List';
+ const epBody=mk('div','sblock-body');
+ D.series.episodes.forEach(ep=>{
+  const row=document.createElement('div');
+  row.style.cssText='margin-bottom:12px;padding-bottom:12px;border-bottom:1px solid var(--border)';
+  row.innerHTML=`<div style="font-size:13px;font-weight:600;color:var(--text-primary);margin-bottom:3px">Ep ${ep.n}: ${esc(ep.title)}</div><div style="font-size:11px;color:var(--text-muted);font-style:italic">${esc(ep.type)}</div>`;
+  epBody.appendChild(row);
+ });
+ epBlock.appendChild(epHdr);epBlock.appendChild(epBody);
+ c.appendChild(epBlock);
+
+ [['Episode Order Strategy',D.series.order],['Internal Linking & CTAs',D.series.linking]]
+  .forEach(([lbl,txt])=>{
+   const b=mk('div','sblock');
+   b.innerHTML=`<div class="sblock-hdr">${lbl}</div><div class="sblock-body">${esc(txt)}</div>`;
+   c.appendChild(b);
+  });
+}
+
+// ─── HELPERS ──────────────────────────────────────────────────────────────────
+function mk(tag,cls){const el=document.createElement(tag);if(cls)el.className=cls;return el;}
+function esc(s){if(!s)return '';return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+
+function cp(text){
+ navigator.clipboard.writeText(text).catch(()=>{
+  const ta=document.createElement('textarea');ta.value=text;
+  document.body.appendChild(ta);ta.select();document.execCommand('copy');
+  document.body.removeChild(ta);
+ });
+ showToast('Copied to clipboard');
+}
+
+function copyAll(){
+ if(!rendered){showToast('Generate scripts first');return;}
+ const parts=[];
+ D.hooks.forEach(h=>parts.push(`HOOK ${h.n} [${h.type}] Score:${h.score} — ${h.text}`));
+ D.scripts.forEach(s=>{parts.push(`\nSCRIPT ${s.n} — ${s.structure}\n`);parts.push(s.voiceover);parts.push(`CTA: ${s.cta}`);});
+ parts.push(`\nSHORT CAPTION:\n${D.captions.short}`);
+ parts.push(`\nLONG CAPTION:\n${D.captions.long}`);
+ parts.push(`\nHASHTAGS: ${[...D.captions.t1,...D.captions.t2,...D.captions.t3].join(' ')}`);
+ cp(parts.join('\n'));
+}
+
+function showSec(key,btn){
+ document.querySelectorAll('.stab').forEach(t=>t.classList.remove('on'));
+ btn.classList.add('on');
+ document.querySelectorAll('.sec').forEach(s=>{
+  s.style.display=(key==='all'||s.dataset.key===key)?'':'none';
+ });
+ if(key!=='all'){
+  document.querySelector(`[data-key="${key}"]`)?.scrollIntoView({behavior:'smooth',block:'start'});
+ }
+}
+
+function resetOut(){
+ document.getElementById('rendered').innerHTML='';
+ document.getElementById('rendered').style.display='none';
+ document.getElementById('tabsEl').innerHTML='<button class="stab on" onclick="showSec(\'all\',this)">All</button>';
+ rendered=false;
+}
+
+function showToast(msg){
+ const t=document.getElementById('toast');
+ t.textContent=msg;t.classList.add('on');
+ setTimeout(()=>t.classList.remove('on'),2000);
+}
+</script>
+</body>
+</html>
